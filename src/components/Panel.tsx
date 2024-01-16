@@ -1,21 +1,24 @@
 import { ReactNode } from 'react'
 
 type Props = {
-   header: ReactNode,
-   children: ReactNode
+	header: ReactNode
+	children: ReactNode
 }
 
 const Panel = (props: Props) => {
-	const {header, children} = props
+	const { header, children } = props
 
-   return (
-      <div className='h-fit w-full border-orange border-2 rounded-lg'>
-         <div className='h-10'>{header}</div>
-         <hr className='border-t-2 border-orange'/>
-         <div>{children}</div>
-      </div>
-   )
-
+	return (
+		<div className='h-fit w-full '>
+			<div className={'h-10 border-t-2 border-x-2 rounded-t-lg overflow-clip'}>
+				{header}
+			</div>
+			<hr className='border-t-2 border-orange' />
+			<div className=' border-orange border-b-2 border-x-2 rounded-b-lg'>
+				{children}
+			</div>
+		</div>
+	)
 }
 
 export default Panel

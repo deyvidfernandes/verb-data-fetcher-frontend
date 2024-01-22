@@ -1,4 +1,5 @@
 import { ProgressBar } from '@/components/ProgressBar'
+import { Tab } from '@/components/Tab'
 import { TextDisplay } from '@/components/textDisplay'
 import { useGlobalStateContext } from '@/util/process/GlobalStateContext'
 import { ProcessStatus } from '@/util/process/types'
@@ -29,7 +30,7 @@ export const ProgressTab = () => {
 	const processProgress = processState.enrichedVerbsCount / processState.verbsQueued
 
 	return (
-		<div className='flex flex-col gap-2 px-4 py-2 '>
+		<Tab>
 			<p id='statusDisplay' className='font-semibold'>
 				Status: {statusDisplayText}
 			</p>
@@ -58,6 +59,6 @@ export const ProgressTab = () => {
 					value={processState.totalFetchedData}
 				/>
 			</div>
-		</div>
+		</Tab>
 	)
 }

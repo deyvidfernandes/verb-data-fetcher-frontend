@@ -2,6 +2,7 @@ type Props = {
 	progress: number
 }
 
+// progress bar based on https://github.com/lucagez/bars
 const barTexture: React.CSSProperties = {
 	backgroundColor: '#FF9A24',
 	backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23CC6E00' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,

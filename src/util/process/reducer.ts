@@ -24,7 +24,6 @@ const addFetchedVerb = createHandlerWithAction<AppGlobalState, { verbDataSize: n
 			},
 			processState: {
 				...state.processState,
-				verbsQueued: state.processState.verbsQueued - 1,
 				enrichedVerbsCount: state.processState.enrichedVerbsCount + 1,
 				totalFetchedData: state.processState.totalFetchedData + payload.verbDataSize,
 			},

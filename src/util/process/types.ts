@@ -18,6 +18,7 @@ export interface ProcessState {
 	enrichedVerbsCount: number
 	verbsQueued: number
 	totalFetchedData: number
+	estimatedProcessRemainingTime: number
 }
 
 export interface ProcessConfiguration {

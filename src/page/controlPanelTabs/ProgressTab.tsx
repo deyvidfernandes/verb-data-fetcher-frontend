@@ -1,4 +1,5 @@
 import { ProgressBar } from '@/components/ProgressBar'
+import { TextDisplay } from '@/components/textDisplay'
 import { useGlobalStateContext } from '@/util/process/GlobalStateContext'
 import { ProcessStatus } from '@/util/process/types'
 
@@ -36,22 +37,26 @@ export const ProgressTab = () => {
 			<ProgressBar progress={processProgress} />
 
 			<div id='displays' className='flex flex-col content-start gap-x-8 flex-wrap h-12'>
-				<p id='verbsEnrichedDisplay' className='text-sm'>
-					<span className='font-medium'>Verbs enriched:</span>{' '}
-					{processState.enrichedVerbsCount}
-				</p>
-				<p id='verbsInQueueDisplay' className='text-sm'>
-					<span className='font-medium'>Verbs in queue:</span>{' '}
-					{processState.verbsQueued - processState.enrichedVerbsCount}
-				</p>
-				<p id='estimatedTimeDisplay' className='text-sm'>
-					<span className='font-medium'>Estimated time:</span>{' '}
-					{processState.estimatedProcessRemainingTime}
-				</p>
-				<p id='totalFetchedDataDisplay' className='text-sm'>
-					<span className='font-medium'>Total fetched data:</span>{' '}
-					{processState.totalFetchedData}
-				</p>
+				<TextDisplay
+					id='verbsEnrichedDisplay'
+					label='Verbs enriched'
+					value={processState.enrichedVerbsCount}
+				/>
+				<TextDisplay
+					id='verbsInQueueDisplay'
+					label='Verbs in queue'
+					value={processState.verbsQueued - processState.enrichedVerbsCount}
+				/>
+				<TextDisplay
+					id='estimatedProcessRemainingTimeDisplay'
+					label='Estimated remaining time'
+					value={processState.estimatedProcessRemainingTime}
+				/>
+				<TextDisplay
+					id='totalFetchedDataDisplay'
+					label='Total fetched data'
+					value={processState.totalFetchedData}
+				/>
 			</div>
 		</div>
 	)

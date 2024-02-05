@@ -7,29 +7,41 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ChangeConfigModal } from '@/page/modals/ChangeConfigModal'
 
 export const DatabaseTab = () => {
-	const databaseConfig = useGlobalStateContext(
-		(v) => v.appGlobalState.processConfiguration.database,
-	)
+	const setupModalRef = useRerenderingOnceRef<ModalInterface>()
+
+	const config = useGlobalStateContext((v) => ({
+		database: v.appGlobalState.processConfiguration.database,
+		persistData: v.appGlobalState.processConfiguration.persistData,
+	}))
+
+	const databaseConfig = config.database
+
 	if (databaseConfig.type) {
-		const typedDatabaseConfig = databaseConfig as notNullDatabaseConfig
 		return (
-			<Tab>
-				<div className='flex flex-col content-start gap-x-8 flex-wrap h-16'>
-					<TextDisplay label='Type' value={typedDatabaseConfig.type} />
-					<TextDisplay label='URL' value={typedDatabaseConfig.url} />
-					<TextDisplay label='Table' value={typedDatabaseConfig.table} />
-					<TextDisplay label='User' value={typedDatabaseConfig.user} />
-					<TextDisplay label='Password' value={typedDatabaseConfig.password} />
-				</div>
-				<Button variant='orange'>
-					<p className='font-medium text-base capitalize'>Change configuration</p>
-				</Button>
-			</Tab>
+			<>
+				<ChangeConfigModal ref={setupModalRef} />
+				<Tab>
+					<div className='flex flex-col content-start gap-x-8 flex-wrap h-16'>
+						<TextDisplay label='Type' value={databaseConfig.type} />
+						<TextDisplay label='URL' value={databaseConfig.url} />
+						<TextDisplay label='Table' value={databaseConfig.table} />
+						<TextDisplay label='User' value={databaseConfig.user} />
+						<TextDisplay label='Password' value={databaseConfig.password} />
+					</div>
+					<Button onClick={setupModalRef.current?.open} variant='orange'>
+						<p className='font-medium text-base capitalize'>Change configuration</p>
+					</Button>
+				</Tab>
+			</>
 		)
 	}
 	return (
 		<div className='flex items-center justify-center p-8'>
-			<p className='font-medium text-gray text-xl'>Waiting for setup...</p>
+			<p className='font-medium text-gray-300 text-xl'>
+				{config.persistData
+					? 'Waiting for setup...'
+					: 'Only "Output JSON" output method was selected'}
+			</p>
 		</div>
 	)
 }

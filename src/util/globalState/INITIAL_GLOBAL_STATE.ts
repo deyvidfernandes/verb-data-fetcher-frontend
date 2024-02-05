@@ -5,17 +5,21 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 		status: ProcessStatus.IN_ERROR,
 		totalFetchedData: 7,
 		enrichedVerbsCount: 0,
-		verbsQueued: 10,
-		estimatedProcessRemainingTime: 0
+		verbsQueued: 260,
+		estimatedProcessRemainingTime: 0,
 	},
 	processConfiguration: {
+		outputJson: false,
+		persistData: true,
+		rawVerbData: [],
 		delay: 0.75,
 		database: {
-			type: null,
-			url: null,
-			table: null,
-			user: null,
-			password: null,
+			type: '',
+			url: '',
+			name: '',
+			table: '',
+			user: '',
+			password: '',
 		},
 	},
 }

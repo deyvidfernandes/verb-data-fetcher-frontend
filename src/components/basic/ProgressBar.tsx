@@ -16,10 +16,10 @@ export const ProgressBar = (props: Props) => {
 
 	return (
 		<div className='flex items-center justify-between gap-2 h-8 w-full'>
-			<div id='progressBarFrame' className='h-8 w-full bg-light-gray rounded-md p-1'>
+			<div id='progressBarFrame' className='h-8 w-full bg-gray-100 rounded-md p-1'>
 				<div
 					id='progressBar'
-					className={`h-full w-[${formattedProgress}%] bg-orange rounded-md transition-all bars`}
+					className={`h-full w-[${formattedProgress}%] bg-brandOrange rounded-md transition-all bars`}
 					style={{
 						...barTexture,
 						width: `${formattedProgress}%`,
@@ -29,7 +29,7 @@ export const ProgressBar = (props: Props) => {
 			</div>
 			<p
 				id='progressBarNumericDisplay'
-				className='flex items-center justify-center h-8 text-xl font-medium min-w-16 bg-light-gray rounded-md'
+				className='flex items-center justify-center h-8 text-xl font-medium min-w-16 bg-gray-100 rounded-md'
 			>
 				{roundedProgress}%
 			</p>

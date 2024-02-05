@@ -12,22 +12,22 @@ const Button = (props: Props) => {
 
 	switch (variant) {
 		case 'green':
-			variantClasses = 'bg-green'
+			variantClasses = 'bg-brandGreen'
 			break
 		case 'red':
-			variantClasses = 'bg-red'
+			variantClasses = 'bg-brandRed'
 			break
 		case 'blocked':
 			variantClasses = 'bg-gray cursor-not-allowed'
 			break
 		case 'orange':
-			variantClasses = 'bg-orange'
+			variantClasses = 'bg-brandOrange'
 			break
 	}
 
 	return (
 		<button
-			className={`w-80 py-2 ${variantClasses} rounded-lg text-4xl font-semibold text-white uppercase`}
+			className={`max-w-80 w-full py-2 ${variantClasses} rounded-lg text-2xl font-semibold text-white uppercase`}
 			type={type}
 			{...builtInProps}
 		>

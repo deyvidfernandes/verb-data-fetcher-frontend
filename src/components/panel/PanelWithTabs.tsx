@@ -25,8 +25,8 @@ export const PanelWithTabs = (props: Props) => {
 				onClick={() => handleChangeTab(tab.id)}
 				className={`
                h-full grid flex-1 items-center capitalize text-xl font-medium 
-               ${isSelected ? 'bg-orange text-white' : 'text-[#FFB257]'} 
-               border-orange ${isTheLastTab ? null : 'border-r-2'}
+               ${isSelected ? 'bg-brandOrange text-white' : 'text-[#FFB257]'} 
+               border-brandOrange ${isTheLastTab ? null : 'border-r-2'}
             `}
 			>
 				{tab.name}

@@ -1,8 +1,8 @@
 import actionCreatorFactory from 'typescript-fsa'
-import { AppGlobalState, ProcessConfiguration, ProcessStatus } from './types'
+import { AppGlobalState, Database, ProcessStatus, RawVerb } from './types'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
-import { INITIAL_GLOBAL_STATE } from './initialGlobalState'
+import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
 
 const actionCreator = actionCreatorFactory()
 
@@ -47,12 +47,32 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 	},
 )
 
-const changeConfiguration = createHandlerWithAction<
+const changeDatabaseConfiguration = createHandlerWithAction<
 	AppGlobalState,
-	{ configuration: ProcessConfiguration }
->('CHANGE_CONFIGURATION', (state, payload) => {
+	{ database: Database; outputJson: boolean; persistData: boolean }
+>('CHANGE_DATABASE_CONFIGURATION', (state, payload) => {
 	return {
-		processConfiguration: payload.configuration,
+		processConfiguration: {
+			...payload,
+			delay: state.processConfiguration.delay,
+			rawVerbData: state.processConfiguration.rawVerbData,
+		},
+		processState: {
+			...state.processState,
+		},
+	}
+})
+
+const setupProcess = createHandlerWithAction<
+	AppGlobalState,
+	{ database: Database; outputJson: boolean; persistData: boolean; rawVerbData: RawVerb[] }
+>('SETUP_PROCESS', (state, payload) => {
+	return {
+		processConfiguration: {
+			...payload,
+			delay: state.processConfiguration.delay,
+			rawVerbData: state.processConfiguration.rawVerbData,
+		},
 		processState: {
 			...state.processState,
 		},
@@ -62,12 +82,29 @@ const changeConfiguration = createHandlerWithAction<
 export type Action =
 	| { type: 'ADD_FETCHED_VERB'; payload: { verbDataSize: number } }
 	| { type: 'CHANGE_STATUS'; payload: { status: ProcessStatus } }
-	| { type: 'CHANGE_CONFIGURATION'; payload: { configuration: ProcessConfiguration } }
+	| {
+			type: 'CHANGE_DATABASE_CONFIGURATION'
+			payload: {
+				outputJson: boolean
+				persistData: boolean
+				database: Database
+			}
+	  }
+	| {
+			type: 'SETUP_PROCESS'
+			payload: {
+				database: Database
+				rawVerbData: RawVerb[]
+				outputJson: boolean
+				persistData: boolean
+			}
+	  }
 
 const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.case(addFetchedVerb.action, addFetchedVerb.handler)
 	.case(changeStatus.action, changeStatus.handler)
-	.case(changeConfiguration.action, changeConfiguration.handler)
+	.case(changeDatabaseConfiguration.action, changeDatabaseConfiguration.handler)
+	.case(setupProcess.action, setupProcess.handler)
 	.build()
 
 export const useGlobalStateReducer = () =>

@@ -1,16 +1,10 @@
-import Button from '@/components/Button'
-import { Tab } from '@/components/Tab'
-import { TextDisplay } from '@/components/textDisplay'
-import { useGlobalStateContext } from '@/util/process/GlobalStateContext'
-import { AvailableDatabaseTypes } from '@/util/process/types'
-
-interface notNullDatabaseConfig {
-	type: AvailableDatabaseTypes
-	url: string
-	table: string
-	user: string
-	password: string
-}
+import Button from '@/components/basic/Button'
+import { ModalInterface } from '@/components/basic/Modal'
+import { Tab } from '@/components/panel/Tab'
+import { TextDisplay } from '@/components/basic/TextDisplay'
+import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
+import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
+import { ChangeConfigModal } from '@/page/modals/ChangeConfigModal'
 
 export const DatabaseTab = () => {
 	const databaseConfig = useGlobalStateContext(

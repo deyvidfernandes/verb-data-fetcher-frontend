@@ -1,8 +1,8 @@
-import { ProgressBar } from '@/components/ProgressBar'
-import { Tab } from '@/components/Tab'
-import { TextDisplay } from '@/components/textDisplay'
-import { useGlobalStateContext } from '@/util/process/GlobalStateContext'
-import { ProcessStatus } from '@/util/process/types'
+import { ProgressBar } from '@/components/basic/ProgressBar'
+import { Tab } from '@/components/panel/Tab'
+import { TextDisplay } from '@/components/basic/TextDisplay'
+import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
+import { ProcessStatus } from '@/util/globalState/types'
 
 const getStatusDisplayText = (processStatus: ProcessStatus) => {
 	switch (processStatus) {

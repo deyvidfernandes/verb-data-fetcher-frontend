@@ -47,6 +47,22 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 	},
 )
 
+const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: number }>(
+	'CHANGE_REQUISITION_DELAY',
+	(state, payload) => {
+		return {
+			processConfiguration: {
+				...state.processConfiguration,
+				delay: payload.delay,
+				database: { ...state.processConfiguration.database },
+			},
+			processState: {
+				...state.processState,
+			},
+		}
+	},
+)
+
 const changeDatabaseConfiguration = createHandlerWithAction<
 	AppGlobalState,
 	{ database: Database; outputJson: boolean; persistData: boolean }
@@ -65,7 +81,12 @@ const changeDatabaseConfiguration = createHandlerWithAction<
 
 const setupProcess = createHandlerWithAction<
 	AppGlobalState,
-	{ database: Database; outputJson: boolean; persistData: boolean; rawVerbData: RawVerb[] }
+	{
+		database: Database
+		outputJson: boolean
+		persistData: boolean
+		rawVerbData: RawVerb[]
+	}
 >('SETUP_PROCESS', (state, payload) => {
 	return {
 		processConfiguration: {
@@ -82,6 +103,7 @@ const setupProcess = createHandlerWithAction<
 export type Action =
 	| { type: 'ADD_FETCHED_VERB'; payload: { verbDataSize: number } }
 	| { type: 'CHANGE_STATUS'; payload: { status: ProcessStatus } }
+	| { type: 'CHANGE_REQUISITION_DELAY'; payload: { delay: number } }
 	| {
 			type: 'CHANGE_DATABASE_CONFIGURATION'
 			payload: {
@@ -103,6 +125,7 @@ export type Action =
 const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.case(addFetchedVerb.action, addFetchedVerb.handler)
 	.case(changeStatus.action, changeStatus.handler)
+	.case(changeRequisitionDelay.action, changeRequisitionDelay.handler)
 	.case(changeDatabaseConfiguration.action, changeDatabaseConfiguration.handler)
 	.case(setupProcess.action, setupProcess.handler)
 	.build()

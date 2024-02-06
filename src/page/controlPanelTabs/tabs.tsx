@@ -1,3 +1,4 @@
+import { ConfigurationTab } from './ConfigurationTab'
 import { DatabaseTab } from './DatabaseTab'
 import { ProgressTab } from './ProgressTab'
 
@@ -10,7 +11,7 @@ export const tabs = [
 	{
 		id: 1,
 		name: 'Database',
-		content: <DatabaseTab/>,
+		content: <DatabaseTab />,
 	},
 	{
 		id: 2,
@@ -20,7 +21,7 @@ export const tabs = [
 	{
 		id: 3,
 		name: 'Configuration',
-		content: <p>ola4</p>,
+		content: <ConfigurationTab />,
 	},
 	{
 		id: 4,

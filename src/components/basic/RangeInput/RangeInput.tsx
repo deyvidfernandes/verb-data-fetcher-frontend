@@ -1,4 +1,4 @@
-import { CSSProperties, ChangeEventHandler, ClassAttributes, useState } from 'react'
+import { ChangeEventHandler } from 'react'
 import './style.css'
 
 interface Props {

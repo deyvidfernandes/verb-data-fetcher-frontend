@@ -1,5 +1,3 @@
-import Button from '@/components/basic/Button'
-import { ModalInterface } from '@/components/basic/Modal'
 import { Tab } from '@/components/panel/Tab'
 import { TextDisplay } from '@/components/basic/TextDisplay'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'

@@ -12,7 +12,7 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 		outputJson: false,
 		persistData: true,
 		rawVerbData: [],
-		delay: 0.75,
+		delay: 0.6,
 		database: {
 			type: '',
 			url: '',

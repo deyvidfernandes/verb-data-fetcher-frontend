@@ -3,22 +3,22 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-   background: none;
-   width: 0.5rem;
- }
- 
+  background: none;
+  width: 0.5rem;
+}
+
  /* Track */
- ::-webkit-scrollbar-track {
-   background: none;
- }
+::-webkit-scrollbar-track {
+  background: none;
+}
  
  /* Handle */
 ::-webkit-scrollbar-thumb {
-   background: theme('colors.brandScrollOrange');
-   border-radius: 0.5rem;
- }
+  background: theme('colors.brandScrollOrange');
+  border-radius: 0.5rem;
+}
 
  /* Handle on hover */
 ::-webkit-scrollbar-thumb:active {
-   background:  hsl(from theme('colors.brandScrollOrangeHover') h s l) 
- }
+  background:  hsl(from theme('colors.brandScrollOrangeHover') h s l) 
+}

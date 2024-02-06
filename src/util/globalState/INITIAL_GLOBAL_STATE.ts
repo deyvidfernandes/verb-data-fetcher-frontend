@@ -2,7 +2,7 @@ import { AppGlobalState, ProcessStatus } from './types'
 
 export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 	processState: {
-		status: ProcessStatus.IN_ERROR,
+		status: ProcessStatus.WAITING_SETUP,
 		totalFetchedData: 7,
 		enrichedVerbsCount: 0,
 		verbsQueued: 260,

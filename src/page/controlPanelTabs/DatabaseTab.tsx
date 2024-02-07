@@ -3,7 +3,6 @@ import { TextDisplay } from '@/components/basic/TextDisplay'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 
 export const DatabaseTab = () => {
-
 	const config = useGlobalStateContext((v) => ({
 		database: v.appGlobalState.processConfiguration.database,
 		persistData: v.appGlobalState.processConfiguration.persistData,
@@ -17,6 +16,7 @@ export const DatabaseTab = () => {
 				<div className='flex flex-col content-start gap-x-8 flex-wrap h-16'>
 					<TextDisplay label='Type' value={databaseConfig.type} />
 					<TextDisplay label='URL' value={databaseConfig.url} />
+					<TextDisplay label='Database' value={databaseConfig.name} />
 					<TextDisplay label='Table' value={databaseConfig.table} />
 					<TextDisplay label='User' value={databaseConfig.user} />
 					<TextDisplay label='Password' value={databaseConfig.password} />

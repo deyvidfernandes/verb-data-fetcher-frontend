@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 interface Props extends ComponentPropsWithoutRef<'button'> {
-	variant: 'green' | 'red' | 'blocked' | 'orange'
+	variant: 'green' | 'red' | 'blocked' | 'orange' | 'darkRed' | 'darkGreen'
 	children: ReactNode
 }
 
@@ -22,6 +22,12 @@ const Button = (props: Props) => {
 			break
 		case 'orange':
 			variantClasses = 'bg-brandOrange'
+			break
+		case 'darkRed':
+			variantClasses = 'bg-brandDarkRed'
+			break
+		case 'darkGreen':
+			variantClasses = 'bg-brandDarkGreen'
 			break
 	}
 

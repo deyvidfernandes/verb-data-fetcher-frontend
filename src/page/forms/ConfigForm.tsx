@@ -8,18 +8,22 @@ import { DatabaseConfigFields } from './DatabaseConfigFields'
 import { CheckboxFieldset } from '../../components/basic/form/CheckboxFieldset'
 import { ErrorDisplay } from '../../components/basic/form/ErrorDisplay'
 import { isRequired, validateOutputMethods } from '@/util/validationsFns'
-import { ConfigValues } from './ConfigValues'
+import { DBConfigValues } from './DBConfigValues'
 
 interface Props {
 	variant: 'setup' | 'change'
-	initialValues?: ConfigValues
-	onSubmit: (ConfigValues: ConfigValues, formikBag: FormikHelpers<ConfigValues>) => void
+	initialValues?: DBConfigValues
+	onSubmit: (
+		ConfigValues: DBConfigValues,
+		formikBag: FormikHelpers<DBConfigValues>,
+	) => void
 	handleClose: () => void
 	availableDBTypes?: SelectOption[]
 	setup?: boolean
+	hidden?: boolean
 }
 
-const DEFAULT_INITIAL_VALUES: ConfigValues = {
+const DEFAULT_INITIAL_VALUES: DBConfigValues = {
 	outputMethod: { persistData: true, outputJson: false },
 	type: '',
 	url: '',
@@ -33,6 +37,7 @@ const DEFAULT_INITIAL_VALUES: ConfigValues = {
 export const ConfigForm = (props: Props) => {
 	const {
 		variant,
+		hidden,
 		initialValues,
 		availableDBTypes,
 		handleClose: handleCloseModal,
@@ -43,10 +48,15 @@ export const ConfigForm = (props: Props) => {
 		<Formik
 			enableReinitialize
 			initialValues={initialValues || DEFAULT_INITIAL_VALUES}
-			onSubmit={(ConfigValues, formikBag) => {onSubmit(ConfigValues, formikBag); handleCloseModal()}}
+			onSubmit={(ConfigValues, formikBag) => {
+				onSubmit(ConfigValues, formikBag)
+			}}
 		>
-			{(form: FormikProps<ConfigValues>) => (
-				<Form autoComplete='off' className='flex flex-col gap-2 w-full'>
+			{(form: FormikProps<DBConfigValues>) => (
+				<Form
+					autoComplete='off'
+					className={`flex flex-col gap-2 w-full ${hidden && 'hidden'}`}
+				>
 					<h1 className='w-full text-center font-semibold text-2xl'>
 						{variant === 'setup' ? 'Setup process' : 'Update config'}
 					</h1>

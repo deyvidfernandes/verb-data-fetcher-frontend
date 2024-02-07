@@ -3,10 +3,10 @@ import { Field, FormikProps } from 'formik'
 import { SelectField, SelectOption } from '../../components/basic/form/SelectField'
 import { ErrorDisplay } from '../../components/basic/form/ErrorDisplay'
 import { isRequired } from '@/util/validationsFns'
-import { ConfigValues } from './ConfigValues'
+import { DBConfigValues } from './DBConfigValues'
 
 interface Props {
-	form: FormikProps<ConfigValues>
+	form: FormikProps<DBConfigValues>
 	availableDBTypes?: SelectOption[]
 	selectedDBType?: string
 }

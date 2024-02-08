@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Panel from './Panel'
-import PanelTab from '@/util/PanelTab'
+import PanelTab from '@/components/panel/PanelTab'
 
 type Props = {
 	tabs: PanelTab[]

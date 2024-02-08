@@ -1,4 +1,5 @@
 import { ConfigurationTab } from './ConfigurationTab'
+import { DataSourcesTab } from './DataSourcesTab'
 import { DatabaseTab } from './DatabaseTab'
 import { ProgressTab } from './ProgressTab'
 
@@ -16,6 +17,7 @@ export const tabs = [
 	{
 		id: 2,
 		name: 'Data sources',
+		content: <DataSourcesTab />,
 	},
 	{
 		id: 3,

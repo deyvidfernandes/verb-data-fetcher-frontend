@@ -3,9 +3,9 @@ import { AppGlobalState, ProcessStatus } from './types'
 export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 	processState: {
 		status: ProcessStatus.WAITING_SETUP,
-		totalFetchedData: 7,
+		totalFetchedData: 0,
 		enrichedVerbsCount: 0,
-		verbsQueued: 260,
+		verbsQueued: 0,
 		estimatedProcessRemainingTime: 0,
 	},
 	processConfiguration: {

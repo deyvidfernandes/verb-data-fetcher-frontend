@@ -24,10 +24,19 @@ const getStatusDisplayText = (processStatus: ProcessStatus) => {
 }
 
 export const ProgressTab = () => {
-	const processState = useGlobalStateContext((v) => v.appGlobalState.processState)
+	const {
+		enrichedVerbsCount,
+		estimatedProcessRemainingTime,
+		status,
+		totalFetchedData,
+		verbsQueued
+	} = useGlobalStateContext((v) => v.appGlobalState.processState)
 
-	const statusDisplayText = getStatusDisplayText(processState.status)
-	const processProgress = processState.enrichedVerbsCount / processState.verbsQueued
+	const statusDisplayText = getStatusDisplayText(status)
+
+	let processProgress;
+	if (enrichedVerbsCount && verbsQueued) processProgress = enrichedVerbsCount / verbsQueued
+	else processProgress = 0
 
 	return (
 		<Tab>
@@ -41,22 +50,22 @@ export const ProgressTab = () => {
 				<TextDisplay
 					id='verbsEnrichedDisplay'
 					label='Verbs enriched'
-					value={processState.enrichedVerbsCount}
+					value={enrichedVerbsCount}
 				/>
 				<TextDisplay
 					id='verbsInQueueDisplay'
 					label='Verbs in queue'
-					value={processState.verbsQueued - processState.enrichedVerbsCount}
+					value={verbsQueued - enrichedVerbsCount}
 				/>
 				<TextDisplay
 					id='estimatedProcessRemainingTimeDisplay'
 					label='Estimated remaining time'
-					value={processState.estimatedProcessRemainingTime}
+					value={estimatedProcessRemainingTime}
 				/>
 				<TextDisplay
 					id='totalFetchedDataDisplay'
 					label='Total fetched data'
-					value={processState.totalFetchedData}
+					value={totalFetchedData}
 				/>
 			</div>
 		</Tab>

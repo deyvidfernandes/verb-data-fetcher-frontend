@@ -102,6 +102,7 @@ const setupProcess = createHandlerWithAction<
 		},
 		processState: {
 			...state.processState,
+			verbsQueued: payload.dataSource.rawVerbData.length,
 		},
 	}
 })

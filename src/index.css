@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+a {
+  color: theme(colors.brandBlue);
+  cursor: pointer;
+  text-decoration: underline
+}
+
 ::-webkit-scrollbar {
   background: none;
   width: 0.5rem;

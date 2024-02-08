@@ -11,7 +11,7 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 	processConfiguration: {
 		outputJson: false,
 		persistData: true,
-		rawVerbData: [],
+		dataSource: null,
 		delay: 0.6,
 		database: {
 			type: '',

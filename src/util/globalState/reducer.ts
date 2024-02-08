@@ -1,5 +1,5 @@
 import actionCreatorFactory from 'typescript-fsa'
-import { AppGlobalState, Database, ProcessStatus, RawVerb } from './types'
+import { AppGlobalState, DataSource, Database, ProcessStatus } from './types'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
 import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
@@ -21,6 +21,8 @@ const addFetchedVerb = createHandlerWithAction<AppGlobalState, { verbDataSize: n
 			processConfiguration: {
 				...state.processConfiguration,
 				database: { ...state.processConfiguration.database },
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				dataSource: { ...state.processConfiguration.dataSource! },
 			},
 			processState: {
 				...state.processState,
@@ -38,6 +40,8 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 			processConfiguration: {
 				...state.processConfiguration,
 				database: { ...state.processConfiguration.database },
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				dataSource: { ...state.processConfiguration.dataSource! },
 			},
 			processState: {
 				...state.processState,
@@ -55,6 +59,8 @@ const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: 
 				...state.processConfiguration,
 				delay: payload.delay,
 				database: { ...state.processConfiguration.database },
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				dataSource: { ...state.processConfiguration.dataSource! },
 			},
 			processState: {
 				...state.processState,
@@ -71,7 +77,8 @@ const changeDatabaseConfiguration = createHandlerWithAction<
 		processConfiguration: {
 			...payload,
 			delay: state.processConfiguration.delay,
-			rawVerbData: state.processConfiguration.rawVerbData,
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
 		},
 		processState: {
 			...state.processState,
@@ -85,14 +92,13 @@ const setupProcess = createHandlerWithAction<
 		database: Database
 		outputJson: boolean
 		persistData: boolean
-		rawVerbData: RawVerb[]
+		dataSource: DataSource
 	}
 >('SETUP_PROCESS', (state, payload) => {
 	return {
 		processConfiguration: {
 			...payload,
 			delay: state.processConfiguration.delay,
-			rawVerbData: state.processConfiguration.rawVerbData,
 		},
 		processState: {
 			...state.processState,
@@ -116,7 +122,7 @@ export type Action =
 			type: 'SETUP_PROCESS'
 			payload: {
 				database: Database
-				rawVerbData: RawVerb[]
+				dataSource: DataSource
 				outputJson: boolean
 				persistData: boolean
 			}

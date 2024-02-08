@@ -7,7 +7,7 @@ export interface ProcessConfiguration {
 	delay: number
 	outputJson: boolean
 	persistData: boolean
-	rawVerbData: RawVerb[]
+	dataSource: DataSource | null;
 	database: Database
 }
 
@@ -26,6 +26,12 @@ export interface Database {
 	table: string
 	user: string
 	password: string
+}
+
+export interface DataSource {
+	rawVerbData: RawVerb[]
+	fileSize: number
+	fileName: string
 }
 
 export interface RawVerb {

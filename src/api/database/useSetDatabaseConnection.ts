@@ -58,6 +58,11 @@ export const useSetDatabaseConnection = () => {
 						database: {
 							...(outputMethod.persistData ? values : initialDBConfigValues),
 						},
+						dataSource: {
+							rawVerbData,
+							fileName: baseDataFile.name,
+							fileSize: baseDataFile.size
+						},
 						...outputMethod,
 					},
 				})

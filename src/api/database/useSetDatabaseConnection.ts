@@ -4,7 +4,7 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { INITIAL_GLOBAL_STATE } from '@/util/globalState/INITIAL_GLOBAL_STATE'
 import { ProcessStatus, RawVerb } from '@/util/globalState/types'
 import { useState } from 'react'
-import { DBConfigValues } from '../../page/forms/DBConfigValues'
+import { DBConfigValues } from '../../content/forms/DBConfigValues'
 
 export const useSetDatabaseConnection = () => {
 	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
@@ -58,7 +58,6 @@ export const useSetDatabaseConnection = () => {
 						database: {
 							...(outputMethod.persistData ? values : initialDBConfigValues),
 						},
-						rawVerbData: rawVerbData,
 						...outputMethod,
 					},
 				})

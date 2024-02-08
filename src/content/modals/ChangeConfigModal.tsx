@@ -1,17 +1,14 @@
 import { RefObject, forwardRef, useState } from 'react'
 import { Modal, ModalInterface } from '../../components/basic/Modal'
+import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ConfigForm } from '../forms/ConfigForm'
 import { DBConfigValues } from '../forms/DBConfigValues'
-import { useGetAvailableDBTypes } from '@/util/backendHooks/useGetAvailableDBTypes'
-import { useSetDatabaseConnection } from '../../util/backendHooks/useSetDatabaseConnection'
+import { useGetAvailableDBTypes } from '@/api/database/useGetAvailableDBTypes'
+import { useSetDatabaseConnection } from '@/api/database/useSetDatabaseConnection'
 import { ConfigResponseModalMessage } from './ConfigResponseModalMessage'
 
-export const SetupModal = forwardRef(function SetupModal(_, ref) {
-	const [isModalOpen, setIsModalOpen] = useState(false)
-	const availableDBTypes = useGetAvailableDBTypes()?.map((type) => ({
-		label: type,
-		value: type,
-	}))
+export const ChangeConfigModal = forwardRef(function SetupModal(_, ref) {
+	const processConfigState = useGlobalStateContext((v) => v.appGlobalState.processConfiguration)
 
 	const {
 		tryDatabaseConnection,
@@ -20,8 +17,15 @@ export const SetupModal = forwardRef(function SetupModal(_, ref) {
 		cleanConnectionAttempt,
 	} = useSetDatabaseConnection()
 
+	const availableDBTypes = useGetAvailableDBTypes()?.map((type) => ({
+		label: type,
+		value: type,
+	}))
+
+	const [isModalOpen, setIsModalOpen] = useState(false)
+
 	const handleSetup = (values: DBConfigValues) => {
-		tryDatabaseConnection(values)
+		tryDatabaseConnection(values, true)
 	}
 
 	const handleConfirmErrorMessage = () => {
@@ -30,21 +34,29 @@ export const SetupModal = forwardRef(function SetupModal(_, ref) {
 
 	const handleConfirmSuccessMessage = () => {
 		typedRef.current?.close()
+		cleanConnectionAttempt()
 	}
 
 	const typedRef = ref as RefObject<ModalInterface>
-
 	return (
 		<Modal
+			ref={ref}
 			onOpen={() => setIsModalOpen(true)}
 			onClose={() => setIsModalOpen(false)}
-			ref={ref}
 		>
 			{isModalOpen && (
 				<ConfigForm
 					hidden={hasServerResponded}
-					variant='setup'
+					variant='change'
 					availableDBTypes={availableDBTypes}
+					initialValues={{
+						...processConfigState.database,
+						outputMethod: {
+							outputJson: processConfigState.outputJson,
+							persistData: processConfigState.persistData,
+						},
+						baseDataFile: null,
+					}}
 					handleClose={() => typedRef.current?.close()}
 					onSubmit={handleSetup}
 				/>

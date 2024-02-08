@@ -16,7 +16,6 @@ export const tabs = [
 	{
 		id: 2,
 		name: 'Data sources',
-		content: <p>ola3</p>,
 	},
 	{
 		id: 3,

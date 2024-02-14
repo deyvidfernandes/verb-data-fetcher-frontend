@@ -6,16 +6,16 @@ import { DBConfigValues } from '../forms/DBConfigValues'
 import { useGetAvailableDBTypes } from '@/api/database/useGetAvailableDBTypes'
 import { useSetDatabaseConnection } from '@/api/database/useSetDatabaseConnection'
 import { ConfigResponseModalMessage } from './ConfigResponseModalMessage'
+import { INITIAL_GLOBAL_STATE } from '@/util/globalState/INITIAL_GLOBAL_STATE'
 
 export const ChangeConfigModal = forwardRef(function SetupModal(_, ref) {
-	const processConfigState = useGlobalStateContext((v) => v.appGlobalState.processConfiguration)
+	const processConfigState = useGlobalStateContext(
+		(v) => v.appGlobalState.processConfiguration,
+	)
+	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
 
-	const {
-		tryDatabaseConnection,
-		dbRequestError,
-		hasServerResponded,
-		cleanConnectionAttempt,
-	} = useSetDatabaseConnection()
+	const dbConnection = useSetDatabaseConnection()
+
 
 	const availableDBTypes = useGetAvailableDBTypes()?.map((type) => ({
 		label: type,
@@ -24,20 +24,43 @@ export const ChangeConfigModal = forwardRef(function SetupModal(_, ref) {
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
-	const handleSetup = (values: DBConfigValues) => {
-		tryDatabaseConnection(values, true)
+	const handleSetup = async (values: DBConfigValues) => {
+		const updateAppGlobalState = async (values: DBConfigValues) => {
+			const { outputMethod } = values
+			const initialDBConfigValues = INITIAL_GLOBAL_STATE.processConfiguration.database
+
+			dispatchGlobalAction({
+				type: 'CHANGE_DATABASE_CONFIGURATION',
+				payload: {
+					database: {
+						...(outputMethod.persistData ? values : initialDBConfigValues),
+					},
+					...outputMethod,
+				},
+			})
+		}
+
+		if (values.outputMethod.persistData) {
+			const successfulConnection = await dbConnection.request(values)
+			if (successfulConnection) updateAppGlobalState(values)
+		}
+		else {
+			updateAppGlobalState(values)
+			typedRef.current?.close()
+		}
 	}
 
 	const handleConfirmErrorMessage = () => {
-		cleanConnectionAttempt()
+		dbConnection.cleanAttempt()
 	}
 
 	const handleConfirmSuccessMessage = () => {
 		typedRef.current?.close()
-		cleanConnectionAttempt()
+		dbConnection.cleanAttempt()
 	}
 
 	const typedRef = ref as RefObject<ModalInterface>
+	const hasServerResponded = !!dbConnection.responseData
 	return (
 		<Modal
 			ref={ref}
@@ -63,7 +86,7 @@ export const ChangeConfigModal = forwardRef(function SetupModal(_, ref) {
 			)}
 			{hasServerResponded && (
 				<ConfigResponseModalMessage
-					dbRequestError={dbRequestError}
+					dbRequestError={dbConnection.responseData?.error}
 					handleConfirmErrorMessage={handleConfirmErrorMessage}
 					handleConfirmSuccessMessage={handleConfirmSuccessMessage}
 				/>

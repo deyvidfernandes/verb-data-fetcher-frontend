@@ -37,7 +37,6 @@ const DEFAULT_INITIAL_VALUES: DBConfigValues = {
 export const ConfigForm = (props: Props) => {
 	const {
 		variant,
-		hidden,
 		initialValues,
 		availableDBTypes,
 		handleClose: handleCloseModal,
@@ -53,10 +52,7 @@ export const ConfigForm = (props: Props) => {
 			}}
 		>
 			{(form: FormikProps<DBConfigValues>) => (
-				<Form
-					autoComplete='off'
-					className={`flex flex-col gap-2 w-full ${hidden && 'hidden'}`}
-				>
+				<Form autoComplete='off' className={'flex flex-col gap-2 w-full'}>
 					<h1 className='w-full text-center font-semibold text-2xl'>
 						{variant === 'setup' ? 'Setup process' : 'Update config'}
 					</h1>

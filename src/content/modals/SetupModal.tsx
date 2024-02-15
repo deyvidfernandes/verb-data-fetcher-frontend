@@ -1,5 +1,5 @@
-import { RefObject, forwardRef, useState } from 'react'
-import { Modal, ModalInterface } from '../../components/basic/Modal'
+import { forwardRef } from 'react'
+import { ModalInterface } from '../../components/basic/modal/Modal'
 import { ConfigForm } from '../forms/ConfigForm'
 import { DBConfigValues } from '../forms/DBConfigValues'
 import { useGetAvailableDBTypes } from '@/api/database/useGetAvailableDBTypes'
@@ -8,17 +8,21 @@ import { ConfigResponseModalMessage } from './ConfigResponseModalMessage'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { INITIAL_GLOBAL_STATE } from '@/util/globalState/INITIAL_GLOBAL_STATE'
 import { ProcessStatus, RawVerb } from '@/util/globalState/types'
+import { ModalWithMessage } from '@/components/basic/modal/ModalWithMessage'
+import { useModalInterfaceRef } from '@/components/basic/modal/useModalInterfaceRef'
 
-export const SetupModal = forwardRef(function SetupModal(_, ref) {
+export const SetupModal = forwardRef<ModalInterface, unknown>(function SetupModal(
+	_,
+	forwardedRef,
+) {
 	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
-	const [isModalOpen, setIsModalOpen] = useState(false)
 	const availableDBTypes = useGetAvailableDBTypes()?.map((type) => ({
 		label: type,
 		value: type,
 	}))
 
 	const dbConnection = useSetDatabaseConnection()
-
+	const ref = useModalInterfaceRef(forwardedRef)
 	const handleSetup = async (values: DBConfigValues) => {
 		const { outputMethod, baseDataFile } = values
 
@@ -53,10 +57,9 @@ export const SetupModal = forwardRef(function SetupModal(_, ref) {
 		if (values.outputMethod.persistData) {
 			const successfulConnection = await dbConnection.request(values)
 			if (successfulConnection) updateAppGlobalState(values)
-		}
-		else {
+		} else {
 			updateAppGlobalState(values)
-			typedRef.current?.close()
+			ref?.current?.close()
 		}
 	}
 
@@ -65,33 +68,29 @@ export const SetupModal = forwardRef(function SetupModal(_, ref) {
 	}
 
 	const handleConfirmSuccessMessage = () => {
-		typedRef.current?.close()
+		ref?.current?.close()
 	}
 
-	const typedRef = ref as RefObject<ModalInterface>
 	const hasServerResponded = !!dbConnection.responseData
 	return (
-		<Modal
-			onOpen={() => setIsModalOpen(true)}
-			onClose={() => setIsModalOpen(false)}
+		<ModalWithMessage
 			ref={ref}
-		>
-			{isModalOpen && (
+			isInMessage={hasServerResponded}
+			content={
 				<ConfigForm
-					hidden={hasServerResponded}
 					variant='setup'
 					availableDBTypes={availableDBTypes}
-					handleClose={() => typedRef.current?.close()}
+					handleClose={() => ref.current?.close()}
 					onSubmit={handleSetup}
 				/>
-			)}
-			{hasServerResponded && (
+			}
+			messageContent={
 				<ConfigResponseModalMessage
 					dbRequestError={dbConnection.responseData?.error}
-					handleConfirmErrorMessage={handleConfirmErrorMessage}
-					handleConfirmSuccessMessage={handleConfirmSuccessMessage}
+					onConfirmErrorMessage={handleConfirmErrorMessage}
+					onConfirmSuccessMessage={handleConfirmSuccessMessage}
 				/>
-			)}
-		</Modal>
+			}
+		/>
 	)
 })

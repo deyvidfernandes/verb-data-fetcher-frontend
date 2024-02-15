@@ -1,16 +1,16 @@
-import { ModalMessage } from '@/components/basic/ModalMessage'
+import { ModalMessage } from '@/components/basic/modal/ModalMessage'
 import { DBConfigRequestError } from '../../api/database/useSetDatabaseConnection'
 
 interface Props {
 	dbRequestError?: DBConfigRequestError
-	handleConfirmErrorMessage: () => void
-	handleConfirmSuccessMessage: () => void
+	onConfirmErrorMessage: () => void
+	onConfirmSuccessMessage: () => void
 }
 
 export const ConfigResponseModalMessage = ({
 	dbRequestError,
-	handleConfirmErrorMessage,
-	handleConfirmSuccessMessage,
+	onConfirmErrorMessage,
+	onConfirmSuccessMessage,
 }: Props) => {
 	return (
 		<ModalMessage
@@ -20,9 +20,7 @@ export const ConfigResponseModalMessage = ({
 				dbRequestError?.exceptionMessage || 'The connection was successfully established'
 			}
 			additionalMessage={dbRequestError ? 'Review your configuration and try again' : ''}
-			onConfirmation={
-				dbRequestError ? handleConfirmErrorMessage : handleConfirmSuccessMessage
-			}
+			onConfirmation={dbRequestError ? onConfirmErrorMessage : onConfirmSuccessMessage}
 		/>
 	)
 }

@@ -1,0 +1,61 @@
+import { ReactNode, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+
+export interface ModalProps {
+	children: ReactNode
+	unstyledContent?: boolean
+	onOpen?: () => void
+	onClose?: () => void
+}
+
+export interface ModalInterface {
+	open: () => void
+	close: () => void
+}
+
+export const Modal = forwardRef<ModalInterface, ModalProps>(function SetupModal(
+	props: ModalProps,
+	ref,
+) {
+	const { children, unstyledContent, onOpen, onClose } = props
+	const dialogRef = useRef<HTMLDialogElement>(null)
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const localOnClose = () => {
+		onClose?.()
+		setIsModalOpen(false)
+	}
+	const localOnOpen = () => {
+		onOpen?.()
+		setIsModalOpen(true)
+	}
+
+	useImperativeHandle(ref, () => {
+		return {
+			open() {
+				if (dialogRef.current) dialogRef.current.showModal()
+				localOnOpen()
+			},
+			close() {
+				if (dialogRef.current) dialogRef.current.close()
+				localOnClose()
+			},
+		}
+	})
+
+	const modalElement = document.getElementById('modal')
+	if (modalElement) {
+		return createPortal(
+			<dialog
+				onClose={localOnClose}
+				className={`${unstyledContent ? '' : 'py-4 px-6'}
+				overflow-y-scroll max-w-md w-full h-full max-h-[35rem]
+            border-brandOrange border-2 rounded-lg 
+            backdrop:bg-black backdrop:opacity-25 `}
+				ref={dialogRef}
+			>
+				{isModalOpen && children}
+			</dialog>,
+			modalElement,
+		)
+	}
+})

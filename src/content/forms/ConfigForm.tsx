@@ -52,7 +52,7 @@ export const ConfigForm = (props: Props) => {
 			}}
 		>
 			{(form: FormikProps<DBConfigValues>) => (
-				<Form autoComplete='off' className={'flex flex-col gap-2 w-full'}>
+				<Form autoComplete='off' className={'flex flex-col gap-2 w-full h-full'}>
 					<h1 className='w-full text-center font-semibold text-2xl'>
 						{variant === 'setup' ? 'Setup process' : 'Update config'}
 					</h1>
@@ -108,7 +108,7 @@ export const ConfigForm = (props: Props) => {
 						)}
 					</div>
 
-					<div className='flex gap-2'>
+					<div className='flex gap-2 justify-self-end'>
 						<Button variant='orange' type='button' onClick={handleCloseModal}>
 							<p className='capitalize font-medium'>Cancel</p>
 						</Button>

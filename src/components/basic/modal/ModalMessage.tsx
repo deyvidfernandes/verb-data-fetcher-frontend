@@ -1,8 +1,8 @@
 import error from '@/assets/circle-exclamation-solid.svg'
 import ok from '@/assets/circle-check-solid.svg'
-import Button from './Button'
+import Button from '../Button'
 
-interface Props {
+export interface ModalMessageProps {
 	variant: 'error' | 'success'
 	title: string
 	content: string
@@ -16,11 +16,11 @@ export const ModalMessage = ({
 	content,
 	additionalMessage,
 	onConfirmation,
-}: Props) => {
+}: ModalMessageProps) => {
 	const isErrorVariant = variant === 'error'
 	return (
 		<div
-			className={`flex flex-col p-4 border-2 rounded-lg items-center gap-2 ${
+			className={`flex flex-col p-4 border-2 rounded-lg items-center gap-2 justify-center h-full ${
 				isErrorVariant
 					? 'bg-brandLightRed border-brandRed'
 					: 'bg-brandLightGreen border-brandGreen'
@@ -33,10 +33,7 @@ export const ModalMessage = ({
 				{content}
 			</p>
 			{additionalMessage && <p className='text-black font-medium'>{additionalMessage}</p>}
-			<Button
-				variant={isErrorVariant ? 'darkRed' : 'darkGreen'}
-				onClick={onConfirmation}
-			>
+			<Button variant={isErrorVariant ? 'darkRed' : 'darkGreen'} onClick={onConfirmation}>
 				OK
 			</Button>
 		</div>

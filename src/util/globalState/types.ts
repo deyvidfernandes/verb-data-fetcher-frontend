@@ -7,7 +7,7 @@ export interface ProcessConfiguration {
 	delay: number
 	outputJson: boolean
 	persistData: boolean
-	dataSource: DataSource | null;
+	dataSource: DataSource | null
 	database: Database
 }
 

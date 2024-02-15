@@ -7,7 +7,7 @@ export function isRequired(value: any) {
 	return error
 }
 
-export function validateOutputMethods(value: {persistData: true, outputJson: false}) {
+export function validateOutputMethods(value: { persistData: true; outputJson: false }) {
 	let error
 	if (!value.outputJson && !value.persistData) {
 		error = 'Select at least one option'

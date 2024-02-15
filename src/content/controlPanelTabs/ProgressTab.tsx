@@ -29,13 +29,14 @@ export const ProgressTab = () => {
 		estimatedProcessRemainingTime,
 		status,
 		totalFetchedData,
-		verbsQueued
+		verbsQueued,
 	} = useGlobalStateContext((v) => v.appGlobalState.processState)
 
 	const statusDisplayText = getStatusDisplayText(status)
 
-	let processProgress;
-	if (enrichedVerbsCount && verbsQueued) processProgress = enrichedVerbsCount / verbsQueued
+	let processProgress
+	if (enrichedVerbsCount && verbsQueued)
+		processProgress = enrichedVerbsCount / verbsQueued
 	else processProgress = 0
 
 	return (

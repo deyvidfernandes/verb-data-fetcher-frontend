@@ -23,7 +23,7 @@ export const CheckboxFieldset = (props: Props) => {
 							type='checkbox'
 							{...opt}
 							onChange={(e) => {
-								const checkedArray = {...field.value}
+								const checkedArray = { ...field.value }
 								if (e.target.checked) checkedArray[opt.id] = true
 								else checkedArray[opt.id] = false
 								form.setFieldValue(field.name, checkedArray)

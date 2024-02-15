@@ -4,12 +4,9 @@ import { useState } from 'react'
 import { DBConfigValues } from '../../content/forms/DBConfigValues'
 
 export const useSetDatabaseConnection = () => {
-
 	const [responseData, setResponseData] = useState<RequestResponse>()
 
-	const request = async (
-		values: DBConfigValues,
-	): Promise<boolean> => {
+	const request = async (values: DBConfigValues): Promise<boolean> => {
 		const postDBConfig = async () => {
 			const { url, type, name } = values
 			const body = {
@@ -28,7 +25,6 @@ export const useSetDatabaseConnection = () => {
 		}
 
 		const handleResponse = async (res: Response) => {
-
 			const handleErrorResponse = async (res: Response) => {
 				const errorData: ErrorResponse = await res.json()
 				setResponseData({

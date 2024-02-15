@@ -2,11 +2,12 @@ import { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 interface Props extends ComponentPropsWithoutRef<'button'> {
 	variant: 'green' | 'red' | 'blocked' | 'orange' | 'darkRed' | 'darkGreen'
+	square?: boolean
 	children: ReactNode
 }
 
 const Button = (props: Props) => {
-	const { variant, children, type, ...builtInProps } = props
+	const { square, variant, children, type, ...builtInProps } = props
 
 	let variantClasses: string
 
@@ -33,7 +34,9 @@ const Button = (props: Props) => {
 
 	return (
 		<button
-			className={`max-w-80 w-full py-2 ${variantClasses} rounded-lg text-2xl font-semibold text-white`}
+			className={`py-2 ${square ? 'w-8 h-8' : 'max-w-80 w-full rounded-lg'} 
+				${variantClasses} text-2xl font-semibold text-white
+				flex items-center justify-center`}
 			type={type}
 			{...builtInProps}
 		>

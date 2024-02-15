@@ -1,5 +1,5 @@
 import Button from '@/components/basic/Button'
-import { ModalInterface } from '@/components/basic/Modal'
+import { ModalInterface } from '@/components/basic/modal/Modal'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
 import { MutableRefObject } from 'react'

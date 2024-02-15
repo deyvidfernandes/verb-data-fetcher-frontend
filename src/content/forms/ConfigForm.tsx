@@ -108,7 +108,7 @@ export const ConfigForm = (props: Props) => {
 						)}
 					</div>
 
-					<div className='flex gap-2 justify-self-end'>
+					<div className='flex gap-2 mt-auto'>
 						<Button variant='orange' type='button' onClick={handleCloseModal}>
 							<p className='capitalize font-medium'>Cancel</p>
 						</Button>

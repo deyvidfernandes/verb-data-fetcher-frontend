@@ -15,7 +15,7 @@ export const ModalWithMessage = forwardRef<ModalInterface, Props>(
 
 		return (
 			<Modal {...props} ref={ref} unstyledContent>
-				<div className={isInMessage ? 'hidden' : 'py-4 px-6 w-full'}>{content}</div>
+				<div className={isInMessage ? 'hidden' : 'py-4 px-6 w-full h-full'}>{content}</div>
 				{isInMessage && <div className={'py-4 px-6 w-full h-full'}>{messageContent}</div>}
 			</Modal>
 		)

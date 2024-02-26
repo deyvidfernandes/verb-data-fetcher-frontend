@@ -5,8 +5,8 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 		status: ProcessStatus.WAITING_SETUP,
 		totalFetchedData: 0,
 		enrichedVerbsCount: 0,
+		lastEnrichmentDuration: [],
 		verbsQueued: 0,
-		estimatedProcessRemainingTime: 0,
 	},
 	processConfiguration: {
 		outputJson: false,

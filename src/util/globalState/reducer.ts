@@ -14,24 +14,28 @@ const createHandlerWithAction = <State, Payload>(
 	return { handler, action }
 }
 
-const addFetchedVerb = createHandlerWithAction<AppGlobalState, { verbDataSize: number }>(
-	'ADD_FETCHED_VERB',
-	(state, payload) => {
-		return {
-			processConfiguration: {
-				...state.processConfiguration,
-				database: { ...state.processConfiguration.database },
-				// biome-ignore lint/style/noNonNullAssertion: <explanation>
-				dataSource: { ...state.processConfiguration.dataSource! },
-			},
-			processState: {
-				...state.processState,
-				enrichedVerbsCount: state.processState.enrichedVerbsCount + 1,
-				totalFetchedData: state.processState.totalFetchedData + payload.verbDataSize,
-			},
-		}
-	},
-)
+const addFetchedVerb = createHandlerWithAction<
+	AppGlobalState,
+	{ verbDataSize: number; enrichmentDuration: number }
+>('ADD_FETCHED_VERB', (state, payload) => {
+	const lastEnrichmentDuration = [...state.processState.lastEnrichmentDuration]
+	if (lastEnrichmentDuration.length === 10) lastEnrichmentDuration.pop()
+	lastEnrichmentDuration.push(payload.enrichmentDuration)
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			database: { ...state.processConfiguration.database },
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			enrichedVerbsCount: state.processState.enrichedVerbsCount + 1,
+			lastEnrichmentDuration: lastEnrichmentDuration,
+			totalFetchedData: state.processState.totalFetchedData + payload.verbDataSize,
+		},
+	}
+})
 
 const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessStatus }>(
 	'CHANGE_STATUS',
@@ -108,7 +112,10 @@ const setupProcess = createHandlerWithAction<
 })
 
 export type Action =
-	| { type: 'ADD_FETCHED_VERB'; payload: { verbDataSize: number } }
+	| {
+			type: 'ADD_FETCHED_VERB'
+			payload: { verbDataSize: number; enrichmentDuration: number }
+	  }
 	| { type: 'CHANGE_STATUS'; payload: { status: ProcessStatus } }
 	| { type: 'CHANGE_REQUISITION_DELAY'; payload: { delay: number } }
 	| {

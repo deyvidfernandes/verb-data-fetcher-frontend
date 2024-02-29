@@ -6,3 +6,7 @@ export interface ErrorResponse {
 	exceptionMessage: string
 	status: number
 }
+
+export type BackendAPIResponse<T> =
+	| { data: T; ok: true }
+	| { data: ErrorResponse; ok: false }

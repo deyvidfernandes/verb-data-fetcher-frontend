@@ -24,11 +24,11 @@ export class Timer {
 	initTime: number
 
 	constructor() {
-		this.initTime = new Date().getTime()
+		this.initTime = performance.now()
 	}
 
 	getElapsedTime() {
-		return new Date().getTime() - this.initTime
+		return performance.now() - this.initTime
 	}
 }
 

@@ -23,7 +23,7 @@ export const ProgressBar = (props: Props) => {
 					style={{
 						...barTexture,
 						width: `${formattedProgress}%`,
-						transitionDuration: '80ms',
+						transitionDuration: '200ms',
 					}}
 				/>
 			</div>

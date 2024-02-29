@@ -32,22 +32,55 @@ export class Timer {
 	}
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const limitedDoWhile = async <T>(
+export const timeoutPromise = async (interval: number) =>
+	new Promise((resolve) => {
+		setTimeout(resolve, interval)
+	})
+
+export const retryWithTimeout = async <T>(
 	callback: () => T,
-	max: number,
-	interval = 5000,
-): Promise<T> => {
+	evaluate: (res: Awaited<T> | undefined, count?: number) => boolean,
+	options: {
+		attempts: number
+		interval?: number
+		throwError?: boolean
+	},
+): Promise<T | undefined> => {
+	const { attempts, interval, throwError } = options
 	let result
 	let counter = 0
 	do {
-		if (counter > 0)
-			await new Promise((resolve) => {
-				setTimeout(resolve, interval)
-			})
+		if (counter > 0 && interval) await timeoutPromise(interval)
 		counter++
+
 		console.log(counter)
-		result = await callback()
-	} while (!result && counter < max)
+
+		try {
+			result = await callback()
+		} catch (error) {
+			if (throwError) throw error
+		}
+	} while (!evaluate(result, counter) && counter < attempts)
 	return result
+}
+
+export type advancedRequestInit = { attempts: number; interval?: number } & RequestInit
+
+export const advancedFetch = async (
+	input: RequestInfo | URL,
+	init?: advancedRequestInit,
+): Promise<Response> => {
+	const validateResponse = (res: Response | undefined) => {
+		if (!res) throw new Error('advancedFetch did not receive response')
+	}
+	const evaluate = (res: Response | undefined) => !!res?.ok
+
+	let res: Response | undefined
+	if (init)
+		res = (await retryWithTimeout(() => fetch(input, init), evaluate, init)) as Response
+	else res = await fetch(input)
+
+	validateResponse(res)
+
+	return res
 }

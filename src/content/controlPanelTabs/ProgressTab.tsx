@@ -3,6 +3,8 @@ import { Tab } from '@/components/panel/Tab'
 import { TextDisplay } from '@/components/basic/TextDisplay'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
+import { arithmeticAverage, formatBytes } from '@/util/fns'
+import { useEffect, useState } from 'react'
 
 const getStatusDisplayText = (processStatus: ProcessStatus) => {
 	switch (processStatus) {
@@ -26,12 +28,12 @@ const getStatusDisplayText = (processStatus: ProcessStatus) => {
 export const ProgressTab = () => {
 	const {
 		enrichedVerbsCount,
-		estimatedProcessRemainingTime,
 		status,
 		totalFetchedData,
 		verbsQueued,
+		lastEnrichmentDuration
 	} = useGlobalStateContext((v) => v.appGlobalState.processState)
-
+	const [lastRemainingTime, setLastRemainingTime] = useState(0)
 	const statusDisplayText = getStatusDisplayText(status)
 
 	let processProgress
@@ -39,7 +41,20 @@ export const ProgressTab = () => {
 		processProgress = enrichedVerbsCount / verbsQueued
 	else processProgress = 0
 
-	return (
+	let remainingTimeMillisec = arithmeticAverage(...lastEnrichmentDuration) * verbsQueued
+	if (lastRemainingTime)
+		remainingTimeMillisec = (lastRemainingTime + remainingTimeMillisec) / 2
+	
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		setLastRemainingTime(remainingTimeMillisec)
+	}, [lastEnrichmentDuration])
+
+	console.log(lastEnrichmentDuration)
+	
+	const estimatedRemainingTime = new Date(remainingTimeMillisec).toISOString().substring(11, 19);
+
+	return (	
 		<Tab>
 			<p id='statusDisplay' className='font-semibold'>
 				Status: {statusDisplayText}
@@ -61,12 +76,12 @@ export const ProgressTab = () => {
 				<TextDisplay
 					id='estimatedProcessRemainingTimeDisplay'
 					label='Estimated remaining time'
-					value={estimatedProcessRemainingTime}
+					value={estimatedRemainingTime}
 				/>
 				<TextDisplay
 					id='totalFetchedDataDisplay'
 					label='Total fetched data'
-					value={totalFetchedData}
+					value={formatBytes(totalFetchedData)}
 				/>
 			</div>
 		</Tab>

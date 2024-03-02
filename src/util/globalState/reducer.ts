@@ -3,6 +3,7 @@ import { AppGlobalState, DataSource, Database, ProcessStatus } from './types'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
 import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
+import { ControlledSessionStorage } from './ControlledSessionStorage'
 
 const actionCreator = actionCreatorFactory()
 
@@ -58,6 +59,7 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: number }>(
 	'CHANGE_REQUISITION_DELAY',
 	(state, payload) => {
+		ControlledSessionStorage.setRequisitionDelay(payload.delay)
 		return {
 			processConfiguration: {
 				...state.processConfiguration,

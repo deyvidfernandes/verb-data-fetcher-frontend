@@ -15,7 +15,7 @@ export namespace ControlledSessionStorage {
 	}
 
 	export const getRequisitionDelay = wrapWithVerify(() => {
-		return Number(sessionStorage.getItem('delay'))
+		return Number(sessionStorage.getItem('delay')) * 1000
 	})
 
 	export const setRequisitionDelay = wrapWithVerify((value: number) => {
@@ -27,6 +27,6 @@ export namespace ControlledSessionStorage {
 		console.log(hasInitiated)
 
 		if (!sessionStorage.getItem('delay'))
-			setRequisitionDelay(INITIAL_GLOBAL_STATE.processConfiguration.delay)
+			setRequisitionDelay(INITIAL_GLOBAL_STATE.processConfiguration.delay * 1000)
 	}
 }

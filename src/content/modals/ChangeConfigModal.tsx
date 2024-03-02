@@ -1,16 +1,16 @@
-import { RefObject, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { ModalInterface } from '../../components/basic/modal/Modal'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ConfigForm } from '../forms/ConfigForm'
 import { DBConfigValues } from '../forms/DBConfigValues'
-import { useGetAvailableDBTypes } from '@/api/database/useGetAvailableDBTypes'
-import { useSetDatabaseConnection } from '@/api/database/useSetDatabaseConnection'
+import { useGetAvailableDBTypes } from '@/api/backend/useGetAvailableDBTypes'
+import { useSetDatabaseConnection } from '@/api/backend/useSetDatabaseConnection'
 import { ConfigResponseModalMessage } from './ConfigResponseModalMessage'
 import { INITIAL_GLOBAL_STATE } from '@/util/globalState/INITIAL_GLOBAL_STATE'
 import { ModalWithMessage } from '@/components/basic/modal/ModalWithMessage'
 import { useModalInterfaceRef } from '@/components/basic/modal/useModalInterfaceRef'
 
-export const ChangeConfigModal = forwardRef<ModalInterface>(function SetupModal(
+export const ChangeConfigModal = forwardRef<ModalInterface, unknown>(function SetupModal(
 	_,
 	forwardedRef,
 ) {
@@ -47,7 +47,7 @@ export const ChangeConfigModal = forwardRef<ModalInterface>(function SetupModal(
 			if (successfulConnection) updateAppGlobalState(values)
 		} else {
 			updateAppGlobalState(values)
-			typedRef.current?.close()
+			ref.current?.close()
 		}
 	}
 
@@ -56,11 +56,10 @@ export const ChangeConfigModal = forwardRef<ModalInterface>(function SetupModal(
 	}
 
 	const handleConfirmSuccessMessage = () => {
-		typedRef.current?.close()
+		ref.current?.close()
 		dbConnection.cleanAttempt()
 	}
 
-	const typedRef = ref as RefObject<ModalInterface>
 	const hasServerResponded = !!dbConnection.responseData
 	return (
 		<ModalWithMessage
@@ -79,7 +78,7 @@ export const ChangeConfigModal = forwardRef<ModalInterface>(function SetupModal(
 						},
 						baseDataFile: null,
 					}}
-					handleClose={() => typedRef.current?.close()}
+					handleClose={() => ref.current?.close()}
 					onSubmit={handleSetup}
 				/>
 			}

@@ -2,11 +2,11 @@ import Button from '@/components/basic/Button'
 import { ModalInterface } from '@/components/basic/modal/Modal'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
-import { MutableRefObject } from 'react'
+import { RefObject } from 'react'
 import lockIcon from '@/assets/lock-solid.svg'
 
 interface Props {
-	setupModalRef: MutableRefObject<ModalInterface | undefined>
+	setupModalRef: RefObject<ModalInterface>
 }
 
 export const ControlButton = ({ setupModalRef }: Props) => {

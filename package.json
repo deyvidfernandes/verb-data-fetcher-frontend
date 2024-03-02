@@ -19,12 +19,14 @@
 		"react-select": "^5.8.0",
 		"typescript-fsa": "^3.0.0",
 		"typescript-fsa-reducers": "^1.2.2",
-		"use-context-selector": "^1.4.1"
+		"use-context-selector": "^1.4.1",
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.4.1",
 		"@types/react": "^18.2.43",
 		"@types/react-dom": "^18.2.17",
+		"@types/uuid": "^9.0.8",
 		"@vitejs/plugin-react": "^4.2.1",
 		"autoprefixer": "^10.4.16",
 		"postcss": "^8.4.32",

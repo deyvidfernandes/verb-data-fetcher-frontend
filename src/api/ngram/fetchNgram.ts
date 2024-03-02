@@ -5,8 +5,8 @@ export const fetchNgram = async (ngram: string) => {
 	const res = await fetchBackend<NgramAPIData[]>(
 		`${BACKEND_API_ADDRESS}ngram?ngram=${ngram}`,
 		{
-			attempts: 2,
-			interval: 2000,
+			attempts: 4,
+			interval: 3000,
 		},
 	)
 	if (res.ok) {

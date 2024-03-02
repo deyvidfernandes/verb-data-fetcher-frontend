@@ -5,11 +5,13 @@ import linkIcon from '@/assets/arrow-up-right-from-square-solid.svg'
 import { TextDisplay } from '../basic/TextDisplay'
 import { v4 as UUIDv4 } from 'uuid'
 import { EnrichedVerb, EnrichedVerbForm, Meaning } from './VerbDataTypes'
+import Loading from 'react-loading'
+import { tailwindTheme } from '@/tailwindTheme'
 
 export const VerbCard = (props: { verbData: EnrichedVerb }) => {
 	const {
+		isEnriching,
 		meanings,
-		id,
 		index,
 		infinitive,
 		pastParticiple,
@@ -49,7 +51,7 @@ export const VerbCard = (props: { verbData: EnrichedVerb }) => {
 							id: 2,
 							title: 'Definition',
 							flex: 2,
-							content: meanings && <DictionaryViewer meanings={meanings} />,
+							content: <DefinitionTab isEnriching={isEnriching} meanings={meanings} />,
 						},
 						{
 							id: 3,
@@ -65,6 +67,18 @@ export const VerbCard = (props: { verbData: EnrichedVerb }) => {
 				/>
 			</div>
 		</div>
+	)
+}
+
+const DefinitionTab = (props: { meanings?: Meaning[][]; isEnriching: boolean }) => {
+	return props.meanings ? (
+		<DictionaryViewer meanings={props.meanings} />
+	) : (
+		props.isEnriching && (
+			<div className=' h-full flex items-center justify-center'>
+				<Loading color={tailwindTheme.colors.brandOrange} type='spin' />
+			</div>
+		)
 	)
 }
 

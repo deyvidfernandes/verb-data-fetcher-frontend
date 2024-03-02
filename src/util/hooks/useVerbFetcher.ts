@@ -13,6 +13,7 @@ import { v4 as UUID4 } from 'uuid'
 import { ControlledSessionStorage } from '../globalState/ControlledSessionStorage'
 
 class VerbData implements EnrichedVerb {
+	isEnriching: boolean
 	infinitive: EnrichedVerbForm
 	simplePast: EnrichedVerbForm
 	pastParticiple: EnrichedVerbForm
@@ -23,12 +24,14 @@ class VerbData implements EnrichedVerb {
 	id: string
 
 	constructor(init: {
+		isEnriching: boolean
 		simplePast: EnrichedVerbForm
 		pastParticiple: EnrichedVerbForm
 		infinitive: EnrichedVerbForm
 		index: number
 	}) {
-		const { index, infinitive, pastParticiple, simplePast } = init
+		const { isEnriching, index, infinitive, pastParticiple, simplePast } = init
+		this.isEnriching = isEnriching
 		this.simplePast = simplePast
 		this.pastParticiple = pastParticiple
 		this.infinitive = infinitive
@@ -117,6 +120,7 @@ class VerbData implements EnrichedVerb {
 
 	async getPayloadLength() {
 		const verbData: EnrichedVerb = {
+			isEnriching: this.isEnriching,
 			id: this.id,
 			infinitive: this.infinitive,
 			index: this.index,
@@ -127,6 +131,10 @@ class VerbData implements EnrichedVerb {
 			usageIndex: this.usageIndex,
 		}
 		return JSON.stringify(verbData).length
+	}
+
+	endEnrichment() {
+		this.isEnriching = false
 	}
 }
 
@@ -202,6 +210,7 @@ export const useVerbFetcher = () => {
 				} = verb
 
 				const verbDataInitializer: EnrichedVerb = {
+					isEnriching: true,
 					simplePast: {
 						wordUS: simplePastUS,
 						wordUK: simplePastUK,
@@ -237,6 +246,7 @@ export const useVerbFetcher = () => {
 				if (dictionaryData) {
 					await verbInEnrichment.enrichWithDictionaryData(dictionaryData)
 				}
+				verbInEnrichment.endEnrichment()
 
 				updateLastVerb(verbInEnrichment)
 				const totalProcessingTime = enrichmentTimer.getElapsedTime()
@@ -245,6 +255,7 @@ export const useVerbFetcher = () => {
 				await new Promise((resolve) => {
 					setTimeout(resolve, delay)
 				})
+
 
 				dispatchGlobalAction({
 					type: 'ADD_FETCHED_VERB',

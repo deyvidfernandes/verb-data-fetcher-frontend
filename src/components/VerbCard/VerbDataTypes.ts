@@ -6,6 +6,7 @@ export interface Meaning {
 ;[]
 
 export interface EnrichedVerb {
+	isEnriching: boolean
 	infinitive: EnrichedVerbForm
 	simplePast: EnrichedVerbForm
 	pastParticiple: EnrichedVerbForm

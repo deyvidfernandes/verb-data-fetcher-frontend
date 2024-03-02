@@ -5,14 +5,14 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 		status: ProcessStatus.WAITING_SETUP,
 		totalFetchedData: 0,
 		enrichedVerbsCount: 0,
-		lastEnrichmentDuration: [],
+		lastEnrichmentDuration: [], // this does not consider the delay
 		verbsQueued: 0,
 	},
 	processConfiguration: {
 		outputJson: false,
 		persistData: true,
 		dataSource: null,
-		delay: 0.6,
+		delay: 4,
 		database: {
 			type: '',
 			url: '',

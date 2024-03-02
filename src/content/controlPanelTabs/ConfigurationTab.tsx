@@ -24,7 +24,6 @@ export const ConfigurationTab = () => {
 			},
 		})
 	}
-
 	return (
 		<>
 			<ChangeConfigModal ref={setupModalRef} />
@@ -33,9 +32,9 @@ export const ConfigurationTab = () => {
 					<RangeInput
 						id='delay'
 						label='Requisition delay:'
-						min={0.6}
-						max={2}
-						step={0.1}
+						min={3}
+						max={10}
+						step={0.5}
 						value={requisitionDelay}
 						onChange={handleDelayChange}
 					/>

@@ -5,6 +5,7 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
 import { arithmeticAverage, formatBytes } from '@/util/fns'
 import { useEffect, useState } from 'react'
+import { ControlledSessionStorage } from '@/util/globalState/ControlledSessionStorage'
 
 const getStatusDisplayText = (processStatus: ProcessStatus) => {
 	switch (processStatus) {
@@ -40,8 +41,8 @@ export const ProgressTab = () => {
 	if (enrichedVerbsCount && verbsQueued)
 		processProgress = enrichedVerbsCount / verbsQueued
 	else processProgress = 0
-
-	let remainingTimeMillisec = arithmeticAverage(...lastEnrichmentDuration) * verbsQueued
+	const requisitionDelay = ControlledSessionStorage.getRequisitionDelay()
+	let remainingTimeMillisec = (arithmeticAverage(...lastEnrichmentDuration) + requisitionDelay) * verbsQueued
 	if (lastRemainingTime)
 		remainingTimeMillisec = (lastRemainingTime + remainingTimeMillisec) / 2
 	

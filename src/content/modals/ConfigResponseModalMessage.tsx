@@ -1,5 +1,5 @@
 import { ModalMessage } from '@/components/basic/modal/ModalMessage'
-import { DBConfigRequestError } from '../../api/database/useSetDatabaseConnection'
+import { DBConfigRequestError } from '../../api/backend/useSetDatabaseConnection'
 
 interface Props {
 	dbRequestError?: DBConfigRequestError

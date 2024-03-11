@@ -4,10 +4,10 @@ import { GlobalStateProvider } from './util/globalState/GlobalStateContext'
 import { ControlButton } from './content/ControlButton'
 import { Section } from './components/basic/Section'
 import { VerbFetcher } from './content/verbFetcher/VerbFetcher'
-import { ControlledLocalStorage } from './util/globalState/ControlledLocalStorage'
+import { ControlledSessionStorage } from './util/globalState/ControlledSessionStorage'
 
 function App() {
-	ControlledLocalStorage.init()
+	ControlledSessionStorage.init()
 
 	return (
 		<GlobalStateProvider>
@@ -15,7 +15,7 @@ function App() {
 
 			<Section title='Control Panel'>
 				<PanelWithTabs tabs={tabs} />
-				<ControlButton/>
+				<ControlButton />
 			</Section>
 
 			<VerbFetcher />

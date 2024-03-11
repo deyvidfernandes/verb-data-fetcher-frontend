@@ -156,6 +156,15 @@ export const useVerbFetcher = () => {
 		])
 	}
 
+	const changeVerbData = (id: string, newVerbData: EnrichedVerb) => {
+		setEnrichedVerbData((prevVerbData) => {
+			const verbData = [...prevVerbData]
+			const editedVerbIndex = verbData.findIndex(vd => vd.id === id)
+			verbData[editedVerbIndex] = newVerbData
+			return verbData
+		})
+	}
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const fetchVerbData = async (rawVerbData: RawVerb[]) => {
@@ -256,7 +265,6 @@ export const useVerbFetcher = () => {
 					setTimeout(resolve, delay)
 				})
 
-
 				dispatchGlobalAction({
 					type: 'ADD_FETCHED_VERB',
 					payload: {
@@ -270,5 +278,5 @@ export const useVerbFetcher = () => {
 		if (rawVerbData) fetchVerbData(rawVerbData)
 	}, [rawVerbData, dispatchGlobalAction])
 
-	return [enrichedVerbData]
+	return {enrichedVerbData, changeVerbData}
 }

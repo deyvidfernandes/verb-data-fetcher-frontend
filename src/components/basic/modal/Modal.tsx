@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 export interface ModalProps {
 	children: ReactNode
 	unstyledContent?: boolean
+	wide?: boolean
 	onOpen?: () => void
 	onClose?: () => void
 }
@@ -17,7 +18,7 @@ export const Modal = forwardRef<ModalInterface, ModalProps>(function SetupModal(
 	props: ModalProps,
 	ref,
 ) {
-	const { children, unstyledContent, onOpen, onClose } = props
+	const { children, unstyledContent, wide, onOpen, onClose } = props
 	const dialogRef = useRef<HTMLDialogElement>(null)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const localOnClose = () => {
@@ -48,7 +49,8 @@ export const Modal = forwardRef<ModalInterface, ModalProps>(function SetupModal(
 			<dialog
 				onClose={localOnClose}
 				className={`${unstyledContent ? '' : 'py-4 px-6'}
-				overflow-y-scroll max-w-md w-full h-full max-h-[35rem]
+				${wide ? 'max-w-5xl w-full' : 'max-w-md w-full h-full max-h-[35rem]'}
+				overflow-y-scroll
             border-brandOrange border-2 rounded-lg 
             backdrop:bg-black backdrop:opacity-25 `}
 				ref={dialogRef}

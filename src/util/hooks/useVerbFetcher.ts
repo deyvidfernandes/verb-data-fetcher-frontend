@@ -260,7 +260,7 @@ export const useVerbFetcher = () => {
 				updateLastVerb(verbInEnrichment)
 				const totalProcessingTime = enrichmentTimer.getElapsedTime()
 
-				const delay = ControlledSessionStorage.getRequisitionDelay()
+				const delay = ControlledSessionStorage.getRequisitionDelayMill()
 				await new Promise((resolve) => {
 					setTimeout(resolve, delay)
 				})

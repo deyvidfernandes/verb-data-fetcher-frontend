@@ -2,6 +2,7 @@ import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
 
 let hasInitiated = false
 export namespace ControlledSessionStorage {
+
 	// biome-ignore lint/complexity/noBannedTypes: <explanation>
 	const wrapWithVerify = <F extends Function>(fn: F): F => {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -14,11 +15,11 @@ export namespace ControlledSessionStorage {
 		return returnFn as unknown as F
 	}
 
-	export const getRequisitionDelay = wrapWithVerify(() => {
-		return Number(sessionStorage.getItem('delay')) * 1000
+	export const getRequisitionDelayMill = wrapWithVerify(() => {
+		return Number(sessionStorage.getItem('delay'))
 	})
 
-	export const setRequisitionDelay = wrapWithVerify((value: number) => {
+	export const setRequisitionDelayMill = wrapWithVerify((value: number) => {
 		return sessionStorage.setItem('delay', value.toString())
 	})
 
@@ -27,6 +28,6 @@ export namespace ControlledSessionStorage {
 		console.log(hasInitiated)
 
 		if (!sessionStorage.getItem('delay'))
-			setRequisitionDelay(INITIAL_GLOBAL_STATE.processConfiguration.delay * 1000)
+			setRequisitionDelayMill(INITIAL_GLOBAL_STATE.processConfiguration.delay)
 	}
 }

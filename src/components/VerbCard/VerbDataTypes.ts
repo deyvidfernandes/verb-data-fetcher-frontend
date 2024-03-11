@@ -1,7 +1,7 @@
 export interface Meaning {
 	definition: string
 	synonyms?: string[]
-	example: string
+	example?: string
 }
 ;[]
 

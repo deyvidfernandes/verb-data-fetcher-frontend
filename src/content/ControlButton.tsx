@@ -4,7 +4,7 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
 import lockIcon from '@/assets/lock-solid.svg'
 import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
-import { SetupModal } from './modals/SetupModal'
+import { SetupModal } from './modals/config/SetupModal'
 
 export const ControlButton = () => {
 	const status = useGlobalStateContext((v) => v.appGlobalState.processState.status)
@@ -20,7 +20,7 @@ export const ControlButton = () => {
 
 	const handleSave = () => {}
 
-	let controlButton;
+	let controlButton
 
 	switch (status) {
 		case ProcessStatus.WAITING_SETUP:

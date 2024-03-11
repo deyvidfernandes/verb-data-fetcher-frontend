@@ -1,7 +1,7 @@
 import { Tab } from '@/components/panel/Tab'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import Button from '@/components/basic/Button'
-import { ChangeConfigModal } from '../modals/ChangeConfigModal'
+import { ChangeConfigModal } from '../modals/config/ChangeConfigModal'
 import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
 import { ModalInterface } from '@/components/basic/modal/Modal'
 import { RangeInput } from '@/components/basic/RangeInput/RangeInput'

@@ -2,6 +2,11 @@ import { Section } from '@/components/basic/Section'
 import Panel from '@/components/panel/Panel'
 import { VerbCard } from '@/components/VerbCard/VerbCard'
 import { useVerbFetcher } from '@/util/hooks/useVerbFetcher'
+import { VerbDataEditorModal } from '../modals/VerbDataEditorModal'
+import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
+import { ModalInterface } from '@/components/basic/modal/Modal'
+import { EnrichedVerb } from '@/components/VerbCard/VerbDataTypes'
+import { useState } from 'react'
 
 // const testData = [
 // 	{
@@ -65,18 +70,44 @@ import { useVerbFetcher } from '@/util/hooks/useVerbFetcher'
 // ]
 
 export const VerbFetcher = () => {
-	const [enrichedVerbData] = useVerbFetcher()
+	const { enrichedVerbData, changeVerbData } = useVerbFetcher()
+	const [editingVerb, setEditingVerb] = useState<EnrichedVerb>()
+	const ref = useRerenderingOnceRef<ModalInterface>()
+
+	const handleEditVerb = (verbData: EnrichedVerb) => {
+		setEditingVerb(verbData)
+		ref.current?.open()
+	}
+
+	const handleSaveEditedVerbData = (data: EnrichedVerb) => {
+		changeVerbData(data.id, data)
+	}
 
 	return (
-		<Section title='Preview'>
-			<Panel header='Search'>
-				<div className='flex flex-col gap-8 px-6 py-8'>
-					{enrichedVerbData.map((verbData) => {
-						return <VerbCard key={verbData.id} verbData={verbData} />
-					})}
-				</div>
-			</Panel>
-		</Section>
+		<>
+			<Section title='Preview'>
+				<Panel header='Search'>
+					<div className='flex flex-col gap-8 px-6 py-8'>
+						{enrichedVerbData.map((verbData) => {
+							return (
+								<VerbCard
+									onEdit={() => handleEditVerb(verbData)}
+									key={verbData.id}
+									verbData={verbData}
+								/>
+							)
+						})}
+					</div>
+				</Panel>
+			</Section>
+			<VerbDataEditorModal
+				ref={ref}
+				editingVerbData={editingVerb}
+				onSuccessfulSave={(editedData) => {
+					handleSaveEditedVerbData(editedData)
+				}}
+			/>
+		</>
 	)
 }
 

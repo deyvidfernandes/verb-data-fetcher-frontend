@@ -8,7 +8,7 @@ import { EnrichedVerb, EnrichedVerbForm, Meaning } from './VerbDataTypes'
 import Loading from 'react-loading'
 import { tailwindTheme } from '@/tailwindTheme'
 
-export const VerbCard = (props: { verbData: EnrichedVerb }) => {
+export const VerbCard = (props: { verbData: EnrichedVerb, onEdit?: () => void}) => {
 	const {
 		isEnriching,
 		meanings,
@@ -19,6 +19,10 @@ export const VerbCard = (props: { verbData: EnrichedVerb }) => {
 		simplePast,
 		usageIndex,
 	} = props.verbData
+	const {
+		onEdit
+	} = props
+
 	return (
 		<div>
 			<div
@@ -26,7 +30,7 @@ export const VerbCard = (props: { verbData: EnrichedVerb }) => {
 				overflow-clip border-brandOrange border-2 
 				border-b-0'
 			>
-				<Button square variant='orange'>
+				<Button square variant='orange' onClick={onEdit}>
 					<img src={editIcon} className='w-5' alt='edit icon' />
 				</Button>
 				<p className='m-l-8 text-2xl text-brandOrange font-bold capitalize'>

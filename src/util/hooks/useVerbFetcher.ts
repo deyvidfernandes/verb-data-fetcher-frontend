@@ -209,7 +209,7 @@ export const useVerbFetcher = () => {
 			// }
 
 			let index = 0
-			for await (const verb of rawVerbData.slice(0, 30)) {
+			for await (const verb of rawVerbData.slice(0, 4)) {
 				const {
 					infinitive,
 					pastParticipleUK,

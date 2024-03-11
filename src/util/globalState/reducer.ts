@@ -1,4 +1,4 @@
-import actionCreatorFactory from 'typescript-fsa'
+import actionCreatorFactory, { Action, ActionCreator } from 'typescript-fsa'
 import { AppGlobalState, DataSource, Database, ProcessStatus } from './types'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
@@ -113,29 +113,30 @@ const setupProcess = createHandlerWithAction<
 	}
 })
 
-export type Action =
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type PayloadTypeFromAction<A extends ActionCreator<any>> = ReturnType<A>['payload']
+
+
+export type GlobalAction =
 	| {
 			type: 'ADD_FETCHED_VERB'
-			payload: { verbDataSize: number; enrichmentDuration: number }
+			payload: PayloadTypeFromAction<typeof addFetchedVerb.action>
 	  }
-	| { type: 'CHANGE_STATUS'; payload: { status: ProcessStatus } }
-	| { type: 'CHANGE_REQUISITION_DELAY'; payload: { delay: number } }
+	| {
+			type: 'CHANGE_STATUS'
+			payload: PayloadTypeFromAction<typeof changeStatus.action>
+	  }
+	| {
+			type: 'CHANGE_REQUISITION_DELAY'
+			payload: PayloadTypeFromAction<typeof changeRequisitionDelay.action>
+	  }
 	| {
 			type: 'CHANGE_DATABASE_CONFIGURATION'
-			payload: {
-				outputJson: boolean
-				persistData: boolean
-				database: Database
-			}
+			payload: PayloadTypeFromAction<typeof changeDatabaseConfiguration.action>
 	  }
 	| {
 			type: 'SETUP_PROCESS'
-			payload: {
-				database: Database
-				dataSource: DataSource
-				outputJson: boolean
-				persistData: boolean
-			}
+			payload: PayloadTypeFromAction<typeof setupProcess.action>
 	  }
 
 const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
@@ -147,4 +148,4 @@ const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.build()
 
 export const useGlobalStateReducer = () =>
-	useReducer<Reducer<AppGlobalState, Action>>(globalAppStateReducer, INITIAL_GLOBAL_STATE)
+	useReducer<Reducer<AppGlobalState, GlobalAction>>(globalAppStateReducer, INITIAL_GLOBAL_STATE)

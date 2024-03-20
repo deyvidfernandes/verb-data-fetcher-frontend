@@ -59,7 +59,7 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: number }>(
 	'CHANGE_REQUISITION_DELAY',
 	(state, payload) => {
-		ControlledSessionStorage.setRequisitionDelayMill(payload.delay)
+		ControlledSessionStorage.setRequisitionDelayMill(payload.delay * 1000)
 		return {
 			processConfiguration: {
 				...state.processConfiguration,

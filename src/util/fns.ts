@@ -84,3 +84,11 @@ export const advancedFetch = async (
 
 	return res
 }
+
+export const scrollToElement = (id: string) => {
+	const el = document.getElementById(id)
+	if (!el) throw new Error('Element not found')
+	el.scrollIntoView({
+		behavior: 'smooth',
+	})
+}

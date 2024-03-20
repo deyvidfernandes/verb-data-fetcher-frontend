@@ -159,7 +159,7 @@ export const useVerbFetcher = () => {
 	const changeVerbData = (id: string, newVerbData: EnrichedVerb) => {
 		setEnrichedVerbData((prevVerbData) => {
 			const verbData = [...prevVerbData]
-			const editedVerbIndex = verbData.findIndex(vd => vd.id === id)
+			const editedVerbIndex = verbData.findIndex((vd) => vd.id === id)
 			verbData[editedVerbIndex] = newVerbData
 			return verbData
 		})
@@ -209,7 +209,7 @@ export const useVerbFetcher = () => {
 			// }
 
 			let index = 0
-			for await (const verb of rawVerbData.slice(0, 4)) {
+			for await (const verb of rawVerbData.slice(0, 12)) {
 				const {
 					infinitive,
 					pastParticipleUK,
@@ -278,5 +278,5 @@ export const useVerbFetcher = () => {
 		if (rawVerbData) fetchVerbData(rawVerbData)
 	}, [rawVerbData, dispatchGlobalAction])
 
-	return {enrichedVerbData, changeVerbData}
+	return { enrichedVerbData, changeVerbData }
 }

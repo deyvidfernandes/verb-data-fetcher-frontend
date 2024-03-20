@@ -7,6 +7,8 @@ import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
 import { ModalInterface } from '@/components/basic/modal/Modal'
 import { EnrichedVerb } from '@/components/VerbCard/VerbDataTypes'
 import { useState } from 'react'
+import { PaginatedItems } from './PaginatedItems'
+import dummy from './dummy.json'
 
 // const testData = [
 // 	{
@@ -69,6 +71,8 @@ import { useState } from 'react'
 // 	},
 // ]
 
+const dummyData = dummy as EnrichedVerb[]
+
 export const VerbFetcher = () => {
 	const { enrichedVerbData, changeVerbData } = useVerbFetcher()
 	const [editingVerb, setEditingVerb] = useState<EnrichedVerb>()
@@ -85,10 +89,13 @@ export const VerbFetcher = () => {
 
 	return (
 		<>
-			<Section title='Preview'>
+			<Section title='Preview' id='preview'>
 				<Panel header='Search'>
-					<div className='flex flex-col gap-8 px-6 py-8'>
-						{enrichedVerbData.map((verbData) => {
+					{/* <div className='flex flex-col gap-8 px-6 py-8'> */}
+					<PaginatedItems
+						itemsPerPage={5}
+						items={dummyData}
+						component={(verbData: EnrichedVerb) => {
 							return (
 								<VerbCard
 									onEdit={() => handleEditVerb(verbData)}
@@ -96,8 +103,9 @@ export const VerbFetcher = () => {
 									verbData={verbData}
 								/>
 							)
-						})}
-					</div>
+						}}
+						elementIdToScrollOnPageChange='preview'
+					/>
 				</Panel>
 			</Section>
 			<VerbDataEditorModal

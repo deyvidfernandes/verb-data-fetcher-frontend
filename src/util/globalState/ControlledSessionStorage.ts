@@ -28,6 +28,6 @@ export namespace ControlledSessionStorage {
 		console.log(hasInitiated)
 
 		if (!sessionStorage.getItem('delay'))
-			setRequisitionDelayMill(INITIAL_GLOBAL_STATE.processConfiguration.delay)
+			setRequisitionDelayMill(INITIAL_GLOBAL_STATE.processConfiguration.delay * 1000)
 	}
 }

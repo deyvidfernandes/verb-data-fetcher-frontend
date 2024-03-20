@@ -1,11 +1,11 @@
 import { Context, ReactNode } from 'react'
 import { useContextSelector, createContext } from 'use-context-selector'
-import { Action, useGlobalStateReducer } from './reducer'
+import { GlobalAction, useGlobalStateReducer } from './reducer'
 import { AppGlobalState } from './types'
 
 interface IContext {
 	appGlobalState: AppGlobalState
-	dispatchGlobalAction: React.Dispatch<Action>
+	dispatchGlobalAction: React.Dispatch<GlobalAction>
 }
 
 const context = createContext<IContext | null>(null)

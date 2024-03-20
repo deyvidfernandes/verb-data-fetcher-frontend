@@ -10,7 +10,7 @@ const Panel = (props: Props) => {
 
 	if (header) {
 		return (
-			<div className='h-fit w-full max-h-[80vh]'>
+			<div className='h-fit w-full'>
 				<div
 					className={
 						'h-10 border-t-2 border-x-2 border-brandOrange rounded-t-lg overflow-clip'
@@ -19,7 +19,7 @@ const Panel = (props: Props) => {
 					{header}
 				</div>
 				<hr className='border-t-2 border-brandOrange' />
-				<div className=' border-brandOrange border-b-2 border-x-2 rounded-b-lg overflow-y-scroll max-h-[calc(80vh-2.5rem)]'>
+				<div className=' border-brandOrange border-b-2 border-x-2 rounded-b-lg'>
 					{children}
 				</div>
 			</div>

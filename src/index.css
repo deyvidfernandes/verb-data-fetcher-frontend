@@ -6,15 +6,15 @@
   outline: none;
 }
 
-a {
+a.audio-anchor {
   color: theme(colors.brandBlue);
   cursor: pointer;
   text-decoration: underline;
-
-  &[aria-disabled='false'] {
-    color: theme(colors.gray.400);
-    cursor: default;
-    text-decoration: line-through 
+  
+  &[aria-disabled='true'] {
+  color: theme(colors.gray.400);
+  cursor: default;
+  text-decoration: line-through 
   }
 }
 
@@ -37,4 +37,9 @@ a {
  /* Handle on hover */
 ::-webkit-scrollbar-thumb:active {
   background:  hsl(from theme('colors.brandScrollOrangeHover') h s l) 
+}
+
+.circle-highlight {
+  border-radius: 50%;
+  background-color: #FFFFFF50;
 }

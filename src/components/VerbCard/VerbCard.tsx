@@ -101,8 +101,8 @@ const AudioAnchor = ({ url }: { url?: string }) => {
 			href={url}
 			target='_blank'
 			rel='noreferrer'
-			className='flex text-sm gap-1 items-center'
-			aria-disabled={!!url}
+			className='audio-anchor flex text-sm gap-1 items-center'
+			aria-disabled={!url}
 		>
 			<p>Audio</p>
 			<img src={linkIcon} alt='link icon' className='h-3' />

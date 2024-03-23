@@ -1,7 +1,7 @@
 import { SectionRowList } from './SectionRowList'
 import Button from '../basic/Button'
-import editIcon from '@/assets/pen-to-square-solid.svg'
-import linkIcon from '@/assets/arrow-up-right-from-square-solid.svg'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { TextDisplay } from '../basic/TextDisplay'
 import { EnrichedVerb, EnrichedVerbForm, Meaning } from './VerbDataTypes'
 import Loading from 'react-loading'
@@ -30,7 +30,7 @@ export const VerbCard = (props: { verbData: EnrichedVerb; onEdit?: () => void })
 				border-b-0`}
 			>
 				<Button square variant={hasError ? 'red' : 'orange'} onClick={onEdit}>
-					<img src={editIcon} className='w-5' alt='edit icon' />
+					<FontAwesomeIcon icon={faPenToSquare} />
 				</Button>
 				<p className={`m-l-8 text-2xl ${textColorClassName} font-bold capitalize`}>
 					{index + 1}. {infinitive.wordUS}
@@ -108,7 +108,7 @@ const AudioAnchor = ({ url }: { url?: string }) => {
 			aria-disabled={!url}
 		>
 			<p>Audio</p>
-			<img src={linkIcon} alt='link icon' className='h-3' />
+			<FontAwesomeIcon icon={faExternalLink} size='sm' />
 		</a>
 	)
 }

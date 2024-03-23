@@ -2,13 +2,14 @@ import Button from '../../components/basic/Button'
 
 import { SelectOption } from '../../components/basic/form/SelectField'
 import { FileInputField } from '../../components/basic/form/FileInputField'
-import uploadFileIcon from '@/assets/file-arrow-up-solid.svg'
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik'
 import { DatabaseConfigFields } from './DatabaseConfigFields'
 import { CheckboxFieldset } from '../../components/basic/form/CheckboxFieldset'
 import { ErrorDisplay } from '../../components/basic/form/ErrorDisplay'
 import { isRequired, validateOutputMethods } from '@/util/validationsFns'
 import { DBConfigValues } from './DBConfigValues'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 interface Props {
 	variant: 'setup' | 'change'
@@ -137,7 +138,7 @@ const JsonFileInputField = (props: FieldProps) => {
 				buttonContent={
 					<div className='flex items-center gap-2'>
 						<p className='text-sm font-light text-dark-gray'>Select JSON file </p>
-						<img className='h-6 inline' src={uploadFileIcon} alt='uploadFileIcon' />
+						<FontAwesomeIcon icon={faFileUpload} className='h-6 text-gray-700' />
 					</div>
 				}
 				selectedContent={(name) => (

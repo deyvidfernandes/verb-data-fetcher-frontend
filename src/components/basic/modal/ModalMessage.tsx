@@ -1,6 +1,7 @@
-import error from '@/assets/circle-exclamation-solid.svg'
-import ok from '@/assets/circle-check-solid.svg'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import Button from '../Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export interface ModalMessageProps {
 	variant: 'error' | 'success'
@@ -26,12 +27,18 @@ export const ModalMessage = ({
 					: 'bg-brandLightGreen border-brandGreen'
 			}`}
 		>
-			<img src={isErrorVariant ? error : ok} className='w-20' alt='Message type icon' />
+			{isErrorVariant ? (
+				<FontAwesomeIcon icon={faExclamationCircle} className='text-brandRed text-8xl' />
+			) : (
+				<FontAwesomeIcon icon={faCheckCircle} className='text-brandGreen text-8xl' />
+			)}
 			<p className='text-black text-2xl font-semibold text-center capitalize'>{title}</p>
-			{content && <p className='text-black text-sm font-medium'>
-			{isErrorVariant && <span className='font-semibold'>Error message: </span>}
-				{content}
-			</p>} 
+			{content && (
+				<p className='text-black text-sm font-medium'>
+					{isErrorVariant && <span className='font-semibold'>Error message: </span>}
+					{content}
+				</p>
+			)}
 			{additionalMessage && <p className='text-black font-medium'>{additionalMessage}</p>}
 			<Button variant={isErrorVariant ? 'darkRed' : 'darkGreen'} onClick={onConfirmation}>
 				OK

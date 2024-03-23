@@ -2,9 +2,10 @@ import Button from '@/components/basic/Button'
 import { ModalInterface } from '@/components/basic/modal/Modal'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
-import lockIcon from '@/assets/lock-solid.svg'
+import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
 import { SetupModal } from './modals/config/SetupModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const ControlButton = () => {
 	const status = useGlobalStateContext((v) => v.appGlobalState.processState.status)
@@ -58,7 +59,7 @@ export const ControlButton = () => {
 						<p className='font-medium text-base text-left leading-5'>
 							Excessive API requests, cooldown needed
 						</p>
-						<img src={lockIcon} className='h-8' alt='Blocked icon' />
+						<FontAwesomeIcon icon={faLock} className='h-8' />
 					</div>
 				</Button>
 			)

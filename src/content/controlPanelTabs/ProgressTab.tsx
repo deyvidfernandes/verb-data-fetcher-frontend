@@ -43,7 +43,8 @@ export const ProgressTab = () => {
 	else processProgress = 0
 	const requisitionDelay = ControlledSessionStorage.getRequisitionDelayMill()
 	let remainingTimeMillisec =
-		(arithmeticAverage(...lastEnrichmentDuration) + requisitionDelay) * verbsQueued
+		(arithmeticAverage(...lastEnrichmentDuration) + requisitionDelay) *
+		(verbsQueued - enrichedVerbsCount)
 	if (lastRemainingTime)
 		remainingTimeMillisec = (lastRemainingTime + remainingTimeMillisec) / 2
 

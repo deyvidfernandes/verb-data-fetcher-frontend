@@ -1,6 +1,7 @@
 import { ConfigurationTab } from './ConfigurationTab'
 import { DataSourcesTab } from './DataSourcesTab'
 import { DatabaseTab } from './DatabaseTab'
+import { ErrorsTab } from './ErrorsTab'
 import { ProgressTab } from './ProgressTab'
 
 export const tabs = [
@@ -27,6 +28,6 @@ export const tabs = [
 	{
 		id: 4,
 		name: 'Errors',
-		content: <p>ola5</p>,
+		content: <ErrorsTab />,
 	},
 ]

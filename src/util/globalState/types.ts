@@ -1,6 +1,11 @@
 export interface AppGlobalState {
 	processState: ProcessState
 	processConfiguration: ProcessConfiguration
+	UIState: UIState
+}
+
+interface UIState {
+	verbOnFocus: string
 }
 
 export interface ProcessConfiguration {
@@ -14,6 +19,7 @@ export interface ProcessConfiguration {
 export interface ProcessState {
 	status: ProcessStatus
 	enrichedVerbsCount: number
+	errors: ProcessError[]
 	verbsQueued: number
 	totalFetchedData: number
 	lastEnrichmentDuration: number[]
@@ -49,4 +55,13 @@ export enum ProcessStatus {
 	IN_ERROR = 3,
 	WAITING_CONFIRMATION_TO_SAVE = 4,
 	PAUSED = 5,
+}
+
+export interface ProcessError {
+	status: 'error' | 'warning' | 'corrected'
+	verbIndex: number
+	verbName: string
+	verbId: string
+	id: string
+	info: string
 }

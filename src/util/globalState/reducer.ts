@@ -1,5 +1,11 @@
-import actionCreatorFactory, { Action, ActionCreator } from 'typescript-fsa'
-import { AppGlobalState, DataSource, Database, ProcessStatus } from './types'
+import actionCreatorFactory, { ActionCreator } from 'typescript-fsa'
+import {
+	AppGlobalState,
+	DataSource,
+	Database,
+	ProcessError,
+	ProcessStatus,
+} from './types'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
 import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
@@ -34,7 +40,30 @@ const addFetchedVerb = createHandlerWithAction<
 			enrichedVerbsCount: state.processState.enrichedVerbsCount + 1,
 			lastEnrichmentDuration: lastEnrichmentDuration,
 			totalFetchedData: state.processState.totalFetchedData + payload.verbDataSize,
+			errors: [...state.processState.errors],
 		},
+		UIState: { ...state.UIState },
+	}
+})
+
+const addProcessError = createHandlerWithAction<
+	AppGlobalState,
+	{ processError: ProcessError }
+>('ADD_PROCESS_ERROR', (state, payload) => {
+	console.log('Error:', state)
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			database: { ...state.processConfiguration.database },
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors: [...state.processState.errors, payload.processError],
+		},
+		UIState: { ...state.UIState },
 	}
 })
 
@@ -51,7 +80,10 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 			processState: {
 				...state.processState,
 				status: payload.status,
+				lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+				errors: [...state.processState.errors],
 			},
+			UIState: { ...state.UIState },
 		}
 	},
 )
@@ -70,7 +102,10 @@ const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: 
 			},
 			processState: {
 				...state.processState,
+				lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+				errors: [...state.processState.errors],
 			},
+			UIState: { ...state.UIState },
 		}
 	},
 )
@@ -88,7 +123,10 @@ const changeDatabaseConfiguration = createHandlerWithAction<
 		},
 		processState: {
 			...state.processState,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors: [...state.processState.errors],
 		},
+		UIState: { ...state.UIState },
 	}
 })
 
@@ -109,18 +147,47 @@ const setupProcess = createHandlerWithAction<
 		processState: {
 			...state.processState,
 			verbsQueued: payload.dataSource.rawVerbData.length,
+			errors: [],
+			lastEnrichmentDuration: [],
 		},
+		UIState: { ...state.UIState },
 	}
 })
 
+const focusOnVerb = createHandlerWithAction<
+	AppGlobalState,
+	{
+		verbID: string
+	}
+>('FOCUS_ON_VERB', (state, payload) => {
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			delay: state.processConfiguration.delay,
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors: [...state.processState.errors],
+		},
+		UIState: { verbOnFocus: payload.verbID },
+	}
+})
+
+
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type PayloadTypeFromAction<A extends ActionCreator<any>> = ReturnType<A>['payload']
-
 
 export type GlobalAction =
 	| {
 			type: 'ADD_FETCHED_VERB'
 			payload: PayloadTypeFromAction<typeof addFetchedVerb.action>
+	  }
+	| {
+			type: 'ADD_PROCESS_ERROR'
+			payload: PayloadTypeFromAction<typeof addProcessError.action>
 	  }
 	| {
 			type: 'CHANGE_STATUS'
@@ -138,14 +205,23 @@ export type GlobalAction =
 			type: 'SETUP_PROCESS'
 			payload: PayloadTypeFromAction<typeof setupProcess.action>
 	  }
+	| {
+			type: 'FOCUS_ON_VERB'
+			payload: PayloadTypeFromAction<typeof focusOnVerb.action>
+	  }
 
 const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.case(addFetchedVerb.action, addFetchedVerb.handler)
+	.case(addProcessError.action, addProcessError.handler)
 	.case(changeStatus.action, changeStatus.handler)
 	.case(changeRequisitionDelay.action, changeRequisitionDelay.handler)
 	.case(changeDatabaseConfiguration.action, changeDatabaseConfiguration.handler)
 	.case(setupProcess.action, setupProcess.handler)
+	.case(focusOnVerb.action, focusOnVerb.handler)
 	.build()
 
 export const useGlobalStateReducer = () =>
-	useReducer<Reducer<AppGlobalState, GlobalAction>>(globalAppStateReducer, INITIAL_GLOBAL_STATE)
+	useReducer<Reducer<AppGlobalState, GlobalAction>>(
+		globalAppStateReducer,
+		INITIAL_GLOBAL_STATE,
+	)

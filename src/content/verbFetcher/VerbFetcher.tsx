@@ -1,80 +1,26 @@
 import { Section } from '@/components/basic/Section'
 import Panel from '@/components/panel/Panel'
 import { VerbCard } from '@/components/VerbCard/VerbCard'
-import { useVerbFetcher } from '@/util/hooks/useVerbFetcher'
+import { useVerbFetcher } from '@/content/verbFetcher/useVerbFetcher'
 import { VerbDataEditorModal } from '../modals/VerbDataEditorModal'
 import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
 import { ModalInterface } from '@/components/basic/modal/Modal'
 import { EnrichedVerb } from '@/components/VerbCard/VerbDataTypes'
 import { useState } from 'react'
 import { PaginatedItems } from './PaginatedItems'
-import dummy from './dummy.json'
+// import dummy from './dummy.json'
+import { useVerbPaginationWithFocus } from './useVerbPaginationWithFocus'
 
-// const testData = [
-// 	{
-// 		infinitive: 'arise',
-// 		simplePastUS: 'arose',
-// 		pastParticipleUS: 'arisen',
-// 	},
-// 	{
-// 		infinitive: 'awake',
-// 		simplePastUS: 'awakened',
-// 		pastParticipleUS: 'awakened',
-// 		simplePastUK: 'awoke',
-// 		pastParticipleUK: 'awoken',
-// 	},
-// 	{
-// 		infinitive: 'backslide',
-// 		simplePastUS: 'backslid',
-// 		pastParticipleUS: 'backslidden',
-// 		simplePastUK: 'backslid',
-// 		pastParticipleUK: 'backslid',
-// 	},
-// 	{
-// 		infinitive: 'be',
-// 		simplePastUS: 'was',
-// 		pastParticipleUS: 'been',
-// 		simplePastUK: 'were',
-// 		pastParticipleUK: 'been',
-// 	},
-// 	{
-// 		infinitive: 'bear',
-// 		simplePastUS: 'bore',
-// 		pastParticipleUS: 'born',
-// 		simplePastUK: 'bore',
-// 		pastParticipleUK: 'borne',
-// 	},
-// 	{
-// 		infinitive: 'beat',
-// 		simplePastUS: 'beat',
-// 		pastParticipleUS: 'beaten',
-// 		simplePastUK: 'beat',
-// 		pastParticipleUK: 'beat',
-// 	},
-// 	{
-// 		infinitive: 'begin',
-// 		simplePastUS: 'began',
-// 		pastParticipleUS: 'begun',
-// 	},
-// 	{ infinitive: 'bend', simplePastUS: 'bent', pastParticipleUS: 'bent' },
-// 	{
-// 		infinitive: 'bet',
-// 		simplePastUS: 'bet',
-// 		pastParticipleUS: 'bet',
-// 		simplePastUK: 'betted',
-// 		pastParticipleUK: 'betted',
-// 	},
-// 	{
-// 		infinitive: 'bind',
-// 		simplePastUS: 'bound',
-// 		pastParticipleUS: 'bound',
-// 	},
-// ]
-
-const dummyData = dummy as EnrichedVerb[]
+// const dummyData = dummy as EnrichedVerb[]
 
 export const VerbFetcher = () => {
 	const { enrichedVerbData, changeVerbData } = useVerbFetcher()
+	const verbsPerPage = 5
+	const { page, handlePageClick } = useVerbPaginationWithFocus(
+		enrichedVerbData,
+		verbsPerPage,
+	)
+
 	const [editingVerb, setEditingVerb] = useState<EnrichedVerb>()
 	const ref = useRerenderingOnceRef<ModalInterface>()
 
@@ -91,10 +37,10 @@ export const VerbFetcher = () => {
 		<>
 			<Section title='Preview' id='preview'>
 				<Panel header='Search'>
-					{/* <div className='flex flex-col gap-8 px-6 py-8'> */}
-					<PaginatedItems
-						itemsPerPage={5}
-						items={dummyData}
+					<PaginatedItems<EnrichedVerb>
+						itemsPerPage={verbsPerPage}
+						page={page}
+						items={enrichedVerbData}
 						component={(verbData: EnrichedVerb) => {
 							return (
 								<VerbCard
@@ -104,7 +50,7 @@ export const VerbFetcher = () => {
 								/>
 							)
 						}}
-						elementIdToScrollOnPageChange='preview'
+						onPageChange={handlePageClick}
 					/>
 				</Panel>
 			</Section>
@@ -118,5 +64,3 @@ export const VerbFetcher = () => {
 		</>
 	)
 }
-
-/* https://books.google.com/ngrams/json?content=have&year_start=2005&year_end=2019&case_insensitive=on&corpus=en-2019&smoothing=0*/

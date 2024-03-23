@@ -4,6 +4,7 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 	processState: {
 		status: ProcessStatus.WAITING_SETUP,
 		totalFetchedData: 0,
+		errors: [],
 		enrichedVerbsCount: 0,
 		lastEnrichmentDuration: [], // this does not consider the delay
 		verbsQueued: 0,
@@ -21,5 +22,8 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 			user: '',
 			password: '',
 		},
+	},
+	UIState: {
+		verbOnFocus: '',
 	},
 }

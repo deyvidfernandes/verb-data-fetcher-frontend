@@ -39,7 +39,30 @@ a.audio-anchor {
   background:  hsl(from theme('colors.brandScrollOrangeHover') h s l) 
 }
 
+.red-scrollbar::-webkit-scrollbar-thumb {
+  background: theme('colors.brandScrollRed');
+}
+
+ /* Handle on hover */
+.red-scrollbar::-webkit-scrollbar-thumb:active {
+  background:  hsl(from theme('colors.brandScrollRedHover') h s l) 
+}
+
+
 .circle-highlight {
   border-radius: 50%;
   background-color: #FFFFFF50;
+}
+
+table {
+  thead {
+    border-bottom: theme(colors.brandOrange) 2px solid;
+  }
+  tbody tr:not(:last-child) {
+    border-bottom: theme(colors.brandOrange) 2px solid;
+  }
+
+  td:not(:last-child), th:not(:last-child) {
+    border-right: theme(colors.brandOrange) 2px solid;
+  }
 }

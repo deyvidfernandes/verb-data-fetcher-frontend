@@ -12,6 +12,8 @@ export const tailwindConfig = {
 				brandLightGreen: 'hsl(101, 67%, 65%)',
 				brandDarkGreen: '#57c026',
 				brandRed: '#D93D3D',
+				brandScrollRed: '#D93D3D99',
+				brandScrollRedHover: '#D93D3DCC',
 				brandLightRed: 'hsl(0, 67%, 65%)',
 				brandDarkRed: 'rgb(192, 38, 38)',
 				brandOrange: '#FF9A24',

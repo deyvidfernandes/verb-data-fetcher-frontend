@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react'
-import { useGlobalStateContext } from '../globalState/GlobalStateContext'
-import { RawVerb } from '../globalState/types'
+import { useGlobalStateContext } from '../../util/globalState/GlobalStateContext'
+import { ProcessError, RawVerb } from '../../util/globalState/types'
 import {
 	EnrichedVerb,
 	EnrichedVerbForm,
 	Meaning,
 } from '@/components/VerbCard/VerbDataTypes'
 import { DictionaryAPIData, fetchWord } from '@/api/dictionary/fetchVerb'
-import { Timer, arithmeticAverage, findPropInObjectArray } from '../fns'
+import { Timer, arithmeticAverage, findPropInObjectArray } from '../../util/fns'
 import { fetchNgram } from '@/api/ngram/fetchNgram'
 import { v4 as UUID4 } from 'uuid'
-import { ControlledSessionStorage } from '../globalState/ControlledSessionStorage'
+import { ControlledSessionStorage } from '../../util/globalState/ControlledSessionStorage'
 
 class VerbData implements EnrichedVerb {
 	isEnriching: boolean
 	infinitive: EnrichedVerbForm
 	simplePast: EnrichedVerbForm
 	pastParticiple: EnrichedVerbForm
+	errors: ProcessError[]
 	meanings?: Meaning[][] | undefined
 	usageIndex?: number | undefined
 	phonetic?: string | undefined
@@ -37,10 +38,15 @@ class VerbData implements EnrichedVerb {
 		this.infinitive = infinitive
 		this.id = UUID4()
 		this.index = index
+		this.errors = []
 	}
 
 	addUsageIndex(usageIndex: number) {
 		this.usageIndex = usageIndex
+	}
+
+	addError(error: ProcessError) {
+		this.errors.push(error)
 	}
 
 	async enrichWithDictionaryData(data: DictionaryAPIData[]) {
@@ -129,6 +135,7 @@ class VerbData implements EnrichedVerb {
 			meanings: this.meanings,
 			phonetic: this.phonetic,
 			usageIndex: this.usageIndex,
+			errors: this.errors,
 		}
 		return JSON.stringify(verbData).length
 	}
@@ -165,49 +172,31 @@ export const useVerbFetcher = () => {
 		})
 	}
 
+	const addProcessError = (
+		verbData: VerbData,
+		description: string,
+		status: 'warning' | 'error',
+	) => {
+		const error = {
+			status,
+			verbName: verbData.infinitive.wordUS,
+			verbIndex: verbData.index,
+			info: description,
+			verbId: verbData.id,
+			id: UUID4(),
+		}
+		verbData.addError(error)
+		dispatchGlobalAction({
+			type: 'ADD_PROCESS_ERROR',
+			payload: {
+				processError: error,
+			},
+		})
+	}
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const fetchVerbData = async (rawVerbData: RawVerb[]) => {
-			// const enrichWithDictionaryData = async (
-			// 	verbData: EnrichedVerb,
-			// 	data: DictionaryAPIData[],
-			// ) => {
-			// 	const { simplePast, pastParticiple, infinitive: _infinitive } = verbData
-			// 	const { wordUS: infinitive } = _infinitive
-			// 	const { wordUS: pastParticipleUS, wordUK: pastParticipleUK } = pastParticiple
-			// 	const { wordUS: simplePastUS, wordUK: simplePastUK } = simplePast
-			// 	const phoneticIndex = findPropInObjectArray(data, 'phonetic')
-			// 	const phonetic = data[phoneticIndex]?.phonetic
-
-			// 	const meanings = getAllVerbMeanings(data)
-
-			// 	const infinitiveAudioURL = await verifyAudio(infinitive)
-			// 	const simplePastAudioURL = await verifyAudio(simplePastUS)
-			// 	const pastParticipleAudioURL = await verifyAudio(pastParticipleUS)
-			// 	let simplePastUKAudioURL
-			// 	if (simplePastUK) simplePastUKAudioURL = await verifyAudio(simplePastUK, true)
-			// 	let pastParticipleUKAudioURL
-			// 	if (pastParticipleUK)
-			// 		pastParticipleUKAudioURL = await verifyAudio(pastParticipleUK, true)
-
-			// 	verbData.infinitive.audioUS = infinitiveAudioURL
-			// 	verbData.simplePast = {
-			// 		wordUS: simplePastUS,
-			// 		audioUS: simplePastAudioURL,
-			// 		wordUK: simplePastUK,
-			// 		audioUK: simplePastUKAudioURL,
-			// 	}
-			// 	verbData.pastParticiple = {
-			// 		wordUS: pastParticipleUS,
-			// 		audioUS: pastParticipleAudioURL,
-			// 		wordUK: pastParticipleUK,
-			// 		audioUK: pastParticipleUKAudioURL,
-			// 	}
-			// 	verbData.meanings = meanings
-			// 	verbData.phonetic = phonetic
-			// 	return verbData
-			// }
-
 			let index = 0
 			for await (const verb of rawVerbData.slice(0, 12)) {
 				const {
@@ -233,6 +222,7 @@ export const useVerbFetcher = () => {
 					},
 					id: UUID4(),
 					index: index++,
+					errors: [],
 				}
 				const verbInEnrichment = new VerbData(verbDataInitializer)
 				addNewVerb(verbInEnrichment)
@@ -254,7 +244,14 @@ export const useVerbFetcher = () => {
 
 				if (dictionaryData) {
 					await verbInEnrichment.enrichWithDictionaryData(dictionaryData)
+				} else {
+					addProcessError(verbInEnrichment, 'No dictionary data available', 'error')
 				}
+
+				if (!verbInEnrichment.phonetic) {
+					addProcessError(verbInEnrichment, 'No phonetic data available', 'warning')
+				}
+
 				verbInEnrichment.endEnrichment()
 
 				updateLastVerb(verbInEnrichment)

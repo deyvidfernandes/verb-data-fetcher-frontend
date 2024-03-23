@@ -7,8 +7,11 @@ import { v4 as UUIDv4 } from 'uuid'
 import { EnrichedVerb, EnrichedVerbForm, Meaning } from './VerbDataTypes'
 import Loading from 'react-loading'
 import { tailwindTheme } from '@/tailwindTheme'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { ProcessError } from '@/util/globalState/types'
 
-export const VerbCard = (props: { verbData: EnrichedVerb, onEdit?: () => void}) => {
+export const VerbCard = (props: { verbData: EnrichedVerb; onEdit?: () => void }) => {
 	const {
 		isEnriching,
 		meanings,
@@ -18,22 +21,26 @@ export const VerbCard = (props: { verbData: EnrichedVerb, onEdit?: () => void}) 
 		phonetic,
 		simplePast,
 		usageIndex,
+		id,
+		errors,
 	} = props.verbData
-	const {
-		onEdit
-	} = props
+	const { onEdit } = props
+
+	const hasError = !!errors.length
+	const borderColorClassName = hasError ? 'border-brandRed' : 'border-brandOrange'
+	const textColorClassName = hasError ? 'text-brandRed' : 'text-brandOrange'
 
 	return (
-		<div>
+		<div id={id}>
 			<div
-				className='w-fit pr-2 flex gap-2 items-center rounded-t-lg 
-				overflow-clip border-brandOrange border-2 
-				border-b-0'
+				className={`w-fit pr-2 flex gap-2 items-center rounded-t-lg 
+				overflow-clip ${borderColorClassName} border-2 
+				border-b-0`}
 			>
-				<Button square variant='orange' onClick={onEdit}>
+				<Button square variant={hasError ? 'red' : 'orange'} onClick={onEdit}>
 					<img src={editIcon} className='w-5' alt='edit icon' />
 				</Button>
-				<p className='m-l-8 text-2xl text-brandOrange font-bold capitalize'>
+				<p className={`m-l-8 text-2xl ${textColorClassName} font-bold capitalize`}>
 					{index + 1}. {infinitive.wordUS}
 				</p>
 			</div>
@@ -55,7 +62,9 @@ export const VerbCard = (props: { verbData: EnrichedVerb, onEdit?: () => void}) 
 							id: 2,
 							title: 'Definition',
 							flex: 2,
-							content: <DefinitionTab isEnriching={isEnriching} meanings={meanings} />,
+							content: (
+								<DefinitionContainer isEnriching={isEnriching} meanings={meanings} />
+							),
 						},
 						{
 							id: 3,
@@ -68,13 +77,15 @@ export const VerbCard = (props: { verbData: EnrichedVerb, onEdit?: () => void}) 
 							),
 						},
 					]}
+					variant={hasError ? 'red' : 'orange'}
 				/>
 			</div>
+			{hasError && <ErrorWarning errors={errors} onEdit={onEdit} />}
 		</div>
 	)
 }
 
-const DefinitionTab = (props: { meanings?: Meaning[][]; isEnriching: boolean }) => {
+const DefinitionContainer = (props: { meanings?: Meaning[][]; isEnriching: boolean }) => {
 	return props.meanings ? (
 		<DictionaryViewer meanings={props.meanings} />
 	) : (
@@ -143,5 +154,35 @@ const DictionaryViewer = (props: { meanings: Meaning[][] }) => {
 				}),
 			)}
 		</ol>
+	)
+}
+
+interface ErrorWarningProps {
+	errors: ProcessError[]
+	onEdit?: () => void
+}
+
+const ErrorWarning = ({ errors, onEdit }: ErrorWarningProps) => {
+	return (
+		<div className=' bg-brandRed py-2 px-4 rounded-b-lg'>
+			<div className='flex justify-between'>
+				<div className='flex gap-4 items-center'>
+					<FontAwesomeIcon icon={faExclamationCircle} color='white' size={'2xl'} />
+					<p className='text-white text-lg'>Error - Missing data</p>
+				</div>
+				<div className='w-52'>
+					<Button variant='orange' onClick={onEdit}>
+						<p className='text-base font-medium'>Edit verb data</p>
+					</Button>
+				</div>
+			</div>
+			<div>
+				{errors.map((error) => (
+					<ul key={error.id} className='pl-12'>
+						<li className='text-white list-disc text-base'>{error.info}</li>
+					</ul>
+				))}
+			</div>
+		</div>
 	)
 }

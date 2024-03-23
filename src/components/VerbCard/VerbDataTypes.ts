@@ -1,3 +1,5 @@
+import { ProcessError } from "@/util/globalState/types"
+
 export interface Meaning {
 	definition: string
 	synonyms?: string[]
@@ -13,6 +15,7 @@ export interface EnrichedVerb {
 	meanings?: Meaning[][]
 	usageIndex?: number
 	phonetic?: string
+	errors: ProcessError[]
 	id: string
 	index: number
 }

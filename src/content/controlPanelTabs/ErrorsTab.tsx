@@ -34,7 +34,7 @@ export const ErrorsTab = () => {
 		const nodeArray = [
 			errorStatusIconMapper[error.status],
 
-			`(Index: ${error.verbIndex}) ${capitalize(error.verbName)}`,
+			`(Index: ${error.verbIndex + 1}) ${capitalize(error.verbName)}`,
 
 			error.info,
 

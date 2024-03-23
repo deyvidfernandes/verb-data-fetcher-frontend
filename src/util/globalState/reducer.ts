@@ -9,7 +9,7 @@ import {
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { Reducer, useReducer } from 'react'
 import { INITIAL_GLOBAL_STATE } from './INITIAL_GLOBAL_STATE'
-import { ControlledSessionStorage } from './ControlledSessionStorage'
+import { ControlledSessionStorage } from '../sessionStorage/ControlledSessionStorage'
 
 const actionCreator = actionCreatorFactory()
 
@@ -66,32 +66,34 @@ const addProcessError = createHandlerWithAction<
 	}
 })
 
-const correctProcessError = createHandlerWithAction<
-	AppGlobalState,
-	{ id: string }
->('CORRECT_PROCESS_ERROR', (state, payload) => {
-	const errorIndex = state.processState.errors.findIndex((error) => error.id === payload.id)
-	const errorData = state.processState.errors[errorIndex]
-	errorData.status = 'corrected'
+const correctProcessError = createHandlerWithAction<AppGlobalState, { id: string }>(
+	'CORRECT_PROCESS_ERROR',
+	(state, payload) => {
+		const errorIndex = state.processState.errors.findIndex(
+			(error) => error.id === payload.id,
+		)
+		const errorData = state.processState.errors[errorIndex]
+		errorData.status = 'corrected'
 
-	const errors = [...state.processState.errors]
-	errors[errorIndex] = errorData
+		const errors = [...state.processState.errors]
+		errors[errorIndex] = errorData
 
-	return {
-		processConfiguration: {
-			...state.processConfiguration,
-			database: { ...state.processConfiguration.database },
-			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-			dataSource: { ...state.processConfiguration.dataSource! },
-		},
-		processState: {
-			...state.processState,
-			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
-			errors,
-		},
-		UIState: { ...state.UIState },
-	}
-})
+		return {
+			processConfiguration: {
+				...state.processConfiguration,
+				database: { ...state.processConfiguration.database },
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				dataSource: { ...state.processConfiguration.dataSource! },
+			},
+			processState: {
+				...state.processState,
+				lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+				errors,
+			},
+			UIState: { ...state.UIState },
+		}
+	},
+)
 
 const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessStatus }>(
 	'CHANGE_STATUS',
@@ -201,7 +203,6 @@ const focusOnVerb = createHandlerWithAction<
 		UIState: { verbOnFocus: payload.verbID },
 	}
 })
-
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type PayloadTypeFromAction<A extends ActionCreator<any>> = ReturnType<A>['payload']

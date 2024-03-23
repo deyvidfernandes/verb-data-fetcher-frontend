@@ -10,7 +10,7 @@ import { DictionaryAPIData, fetchWord } from '@/api/dictionary/fetchVerb'
 import { Timer, arithmeticAverage, findPropInObjectArray } from '../../util/fns'
 import { fetchNgram } from '@/api/ngram/fetchNgram'
 import { v4 as UUID4 } from 'uuid'
-import { ControlledSessionStorage } from '../../util/globalState/ControlledSessionStorage'
+import { ControlledSessionStorage } from '../../util/sessionStorage/ControlledSessionStorage'
 
 class VerbData implements EnrichedVerb {
 	payload: {

@@ -5,7 +5,7 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ProcessStatus } from '@/util/globalState/types'
 import { arithmeticAverage, formatBytes } from '@/util/fns'
 import { useEffect, useState } from 'react'
-import { ControlledSessionStorage } from '@/util/globalState/ControlledSessionStorage'
+import { ControlledSessionStorage } from '@/util/sessionStorage/ControlledSessionStorage'
 
 const getStatusDisplayText = (processStatus: ProcessStatus) => {
 	switch (processStatus) {
@@ -32,7 +32,7 @@ export const ProgressTab = () => {
 		status,
 		totalFetchedData,
 		verbsQueued,
-		lastEnrichmentDuration
+		lastEnrichmentDuration,
 	} = useGlobalStateContext((v) => v.appGlobalState.processState)
 	const [lastRemainingTime, setLastRemainingTime] = useState(0)
 	const statusDisplayText = getStatusDisplayText(status)
@@ -42,20 +42,23 @@ export const ProgressTab = () => {
 		processProgress = enrichedVerbsCount / verbsQueued
 	else processProgress = 0
 	const requisitionDelay = ControlledSessionStorage.getRequisitionDelayMill()
-	let remainingTimeMillisec = (arithmeticAverage(...lastEnrichmentDuration) + requisitionDelay) * verbsQueued
+	let remainingTimeMillisec =
+		(arithmeticAverage(...lastEnrichmentDuration) + requisitionDelay) * verbsQueued
 	if (lastRemainingTime)
 		remainingTimeMillisec = (lastRemainingTime + remainingTimeMillisec) / 2
-	
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setLastRemainingTime(remainingTimeMillisec)
 	}, [lastEnrichmentDuration])
 
 	console.log(lastEnrichmentDuration)
-	
-	const estimatedRemainingTime = new Date(remainingTimeMillisec).toISOString().substring(11, 19);
 
-	return (	
+	const estimatedRemainingTime = new Date(remainingTimeMillisec)
+		.toISOString()
+		.substring(11, 19)
+
+	return (
 		<Tab>
 			<p id='statusDisplay' className='font-semibold'>
 				Status: {statusDisplayText}

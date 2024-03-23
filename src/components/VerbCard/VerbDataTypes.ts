@@ -1,4 +1,4 @@
-import { ProcessError } from "@/util/globalState/types"
+import { ProcessError } from '@/util/globalState/types'
 
 export interface Meaning {
 	definition: string
@@ -9,16 +9,20 @@ export interface Meaning {
 ;[]
 
 export interface EnrichedVerb {
-	isEnriching: boolean
-	infinitive: EnrichedVerbForm
-	simplePast: EnrichedVerbForm
-	pastParticiple: EnrichedVerbForm
-	meanings?: Meaning[][]
-	usageIndex?: number
-	phonetic?: string
-	errors: ProcessError[]
-	id: string
-	index: number
+	metadata: {
+		isEnriching: boolean
+		errors: ProcessError[]
+		id: string
+		index: number
+	}
+	payload: {
+		infinitive: EnrichedVerbForm
+		simplePast: EnrichedVerbForm
+		pastParticiple: EnrichedVerbForm
+		meanings?: Meaning[][]
+		usageIndex?: number
+		phonetic?: string
+	}
 }
 export interface EnrichedVerbForm {
 	wordUS: string

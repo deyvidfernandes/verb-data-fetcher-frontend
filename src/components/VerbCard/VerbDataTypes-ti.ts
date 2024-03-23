@@ -8,6 +8,7 @@ export const Meaning = t.iface([], {
 	definition: 'string',
 	synonyms: t.opt(t.array('string')),
 	example: t.opt('string'),
+	id: 'string',
 })
 
 export const EnrichedVerbForm = t.iface([], {
@@ -25,8 +26,6 @@ export const EnrichedVerb = t.iface([], {
 	meanings: t.opt(t.array(t.array(Meaning))),
 	usageIndex: 'number',
 	phonetic: 'string',
-	id: 'string',
-	index: 'number',
 })
 
 const exportedTypeSuite: t.ITypeSuite = {

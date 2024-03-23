@@ -30,7 +30,7 @@ export const VerbFetcher = () => {
 	}
 
 	const handleSaveEditedVerbData = (data: EnrichedVerb) => {
-		changeVerbData(data.id, data)
+		changeVerbData(data.metadata.id, data)
 	}
 
 	return (
@@ -45,7 +45,7 @@ export const VerbFetcher = () => {
 							return (
 								<VerbCard
 									onEdit={() => handleEditVerb(verbData)}
-									key={verbData.id}
+									key={verbData.metadata.id}
 									verbData={verbData}
 								/>
 							)

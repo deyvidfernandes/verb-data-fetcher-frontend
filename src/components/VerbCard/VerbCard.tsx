@@ -3,7 +3,6 @@ import Button from '../basic/Button'
 import editIcon from '@/assets/pen-to-square-solid.svg'
 import linkIcon from '@/assets/arrow-up-right-from-square-solid.svg'
 import { TextDisplay } from '../basic/TextDisplay'
-import { v4 as UUIDv4 } from 'uuid'
 import { EnrichedVerb, EnrichedVerbForm, Meaning } from './VerbDataTypes'
 import Loading from 'react-loading'
 import { tailwindTheme } from '@/tailwindTheme'
@@ -12,18 +11,11 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { ProcessError } from '@/util/globalState/types'
 
 export const VerbCard = (props: { verbData: EnrichedVerb; onEdit?: () => void }) => {
-	const {
-		isEnriching,
-		meanings,
-		index,
-		infinitive,
-		pastParticiple,
-		phonetic,
-		simplePast,
-		usageIndex,
-		id,
-		errors,
-	} = props.verbData
+	const { meanings, infinitive, pastParticiple, phonetic, simplePast, usageIndex } =
+		props.verbData.payload
+
+	const { isEnriching, index, id, errors } = props.verbData.metadata
+
 	const { onEdit } = props
 
 	const hasError = !!errors.length

@@ -13,16 +13,15 @@ import { v4 as UUID4 } from 'uuid'
 import { ControlledSessionStorage } from '../../util/globalState/ControlledSessionStorage'
 
 class VerbData implements EnrichedVerb {
-	isEnriching: boolean
-	infinitive: EnrichedVerbForm
-	simplePast: EnrichedVerbForm
-	pastParticiple: EnrichedVerbForm
-	errors: ProcessError[]
-	meanings?: Meaning[][] | undefined
-	usageIndex?: number | undefined
-	phonetic?: string | undefined
-	index: number
-	id: string
+	payload: {
+		infinitive: EnrichedVerbForm
+		simplePast: EnrichedVerbForm
+		pastParticiple: EnrichedVerbForm
+		meanings?: Meaning[][] | undefined
+		usageIndex?: number | undefined
+		phonetic?: string | undefined
+	}
+	metadata: { isEnriching: boolean; errors: ProcessError[]; id: string; index: number }
 
 	constructor(init: {
 		simplePast: EnrichedVerbForm
@@ -31,21 +30,25 @@ class VerbData implements EnrichedVerb {
 		index: number
 	}) {
 		const { index, infinitive, pastParticiple, simplePast } = init
-		this.isEnriching = true
-		this.simplePast = simplePast
-		this.pastParticiple = pastParticiple
-		this.infinitive = infinitive
-		this.id = UUID4()
-		this.index = index
-		this.errors = []
+		this.payload = {
+			simplePast: simplePast,
+			pastParticiple: pastParticiple,
+			infinitive: infinitive,
+		}
+		this.metadata = {
+			isEnriching: true,
+			errors: [],
+			id: UUID4(),
+			index: index,
+		}
 	}
 
 	addUsageIndex(usageIndex: number) {
-		this.usageIndex = usageIndex
+		this.payload.usageIndex = usageIndex
 	}
 
 	addError(error: ProcessError) {
-		this.errors.push(error)
+		this.metadata.errors.push(error)
 	}
 
 	async enrichWithDictionaryData(data: DictionaryAPIData[]) {
@@ -89,7 +92,7 @@ class VerbData implements EnrichedVerb {
 			return meaningAcc
 		}
 
-		const { simplePast, pastParticiple, infinitive: _infinitive } = this
+		const { simplePast, pastParticiple, infinitive: _infinitive } = this.payload
 		const { wordUS: infinitive } = _infinitive
 		const { wordUS: pastParticipleUS, wordUK: pastParticipleUK } = pastParticiple
 		const { wordUS: simplePastUS, wordUK: simplePastUK } = simplePast
@@ -107,41 +110,34 @@ class VerbData implements EnrichedVerb {
 		if (pastParticipleUK)
 			pastParticipleUKAudioURL = await verifyAudio(pastParticipleUK, true)
 
-		this.infinitive.audioUS = infinitiveAudioURL
-		this.simplePast = {
+		this.payload.infinitive.audioUS = infinitiveAudioURL
+		this.payload.simplePast = {
 			wordUS: simplePastUS,
 			audioUS: simplePastAudioURL,
 			wordUK: simplePastUK,
 			audioUK: simplePastUKAudioURL,
 		}
-		this.pastParticiple = {
+		this.payload.pastParticiple = {
 			wordUS: pastParticipleUS,
 			audioUS: pastParticipleAudioURL,
 			wordUK: pastParticipleUK,
 			audioUK: pastParticipleUKAudioURL,
 		}
-		this.meanings = meanings
-		this.phonetic = phonetic
+		this.payload.meanings = meanings
+		this.payload.phonetic = phonetic
 	}
 
 	async getPayloadLength() {
 		const verbData: EnrichedVerb = {
-			isEnriching: this.isEnriching,
-			id: this.id,
-			infinitive: this.infinitive,
-			index: this.index,
-			pastParticiple: this.pastParticiple,
-			simplePast: this.simplePast,
-			meanings: this.meanings,
-			phonetic: this.phonetic,
-			usageIndex: this.usageIndex,
-			errors: this.errors,
+			metadata: this.metadata,
+			payload: this.payload,
 		}
+
 		return JSON.stringify(verbData).length
 	}
 
 	endEnrichment() {
-		this.isEnriching = false
+		this.metadata.isEnriching = false
 	}
 }
 
@@ -166,7 +162,7 @@ export const useVerbFetcher = () => {
 	const changeVerbData = (id: string, newVerbData: EnrichedVerb) => {
 		setEnrichedVerbData((prevVerbData) => {
 			const verbData = [...prevVerbData]
-			const editedVerbIndex = verbData.findIndex((vd) => vd.id === id)
+			const editedVerbIndex = verbData.findIndex((vd) => vd.metadata.id === id)
 			verbData[editedVerbIndex] = newVerbData
 			return verbData
 		})
@@ -179,10 +175,10 @@ export const useVerbFetcher = () => {
 	) => {
 		const error = {
 			status,
-			verbName: verbData.infinitive.wordUS,
-			verbIndex: verbData.index,
+			verbName: verbData.payload.infinitive.wordUS,
+			verbIndex: verbData.metadata.index,
 			info: description,
-			verbId: verbData.id,
+			verbId: verbData.metadata.id,
 			id: UUID4(),
 		}
 		verbData.addError(error)
@@ -246,7 +242,7 @@ export const useVerbFetcher = () => {
 					addProcessError(verbInEnrichment, 'No dictionary data available', 'error')
 				}
 
-				if (!verbInEnrichment.phonetic) {
+				if (!verbInEnrichment.payload.phonetic) {
 					addProcessError(verbInEnrichment, 'No phonetic data available', 'warning')
 				}
 

@@ -15,10 +15,10 @@ export const useVerbPaginationWithFocus = (
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const verb = enrichedVerbData.find((verb) => verb.id === verbOnFocus)
+		const verb = enrichedVerbData.find((verb) => verb.metadata.id === verbOnFocus)
 		if (!verb) return console.error('Verb to focus not found')
-		setPage(Math.ceil(verb.index / verbsPerPage) - 1)
-		setTimeout(() => scrollToElement(verb.id), 20)
+		setPage(Math.ceil(verb.metadata.index / verbsPerPage) - 1)
+		setTimeout(() => scrollToElement(verb.metadata.id), 20)
 		dispatchGlobalAction({ type: 'FOCUS_ON_VERB', payload: { verbID: '' } })
 	}, [verbOnFocus])
 

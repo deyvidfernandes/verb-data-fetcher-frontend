@@ -10,8 +10,33 @@ import { useState } from 'react'
 import { PaginatedItems } from './PaginatedItems'
 // import dummy from './dummy.json'
 import { useVerbPaginationWithFocus } from './useVerbPaginationWithFocus'
+import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 
 // const dummyData = dummy as EnrichedVerb[]
+
+const useErrorCorrector = () => {
+	const [ processErrors, dispatchGlobalAction ] = useGlobalStateContext(v => [
+		v.appGlobalState.processState.errors,
+		v.dispatchGlobalAction
+	])
+
+	const correctErrors = (verbId: string) => {
+		const errorsRelated = processErrors.filter((error) => error.verbId === verbId)
+		if (errorsRelated) {
+			for (const error of errorsRelated) {
+				dispatchGlobalAction({
+					type: 'CORRECT_PROCESS_ERROR',
+					payload: {
+						id: error.id
+					}
+				})
+			}
+		}
+	}
+
+	return { correctErrors }
+
+}
 
 export const VerbFetcher = () => {
 	const { enrichedVerbData, changeVerbData } = useVerbFetcher()
@@ -20,6 +45,7 @@ export const VerbFetcher = () => {
 		enrichedVerbData,
 		verbsPerPage,
 	)
+	const {correctErrors} = useErrorCorrector()
 
 	const [editingVerb, setEditingVerb] = useState<EnrichedVerb>()
 	const ref = useRerenderingOnceRef<ModalInterface>()
@@ -30,6 +56,10 @@ export const VerbFetcher = () => {
 	}
 
 	const handleSaveEditedVerbData = (data: EnrichedVerb) => {
+		if (data.metadata.errors.length) {
+			data.metadata.errors = []
+			correctErrors(data.metadata.id)
+		}
 		changeVerbData(data.metadata.id, data)
 	}
 

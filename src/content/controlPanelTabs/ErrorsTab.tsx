@@ -43,7 +43,7 @@ export const ErrorsTab = () => {
 				onClick={() => {
 					dispatchGlobalAction({
 						type: 'FOCUS_ON_VERB',
-						payload: { verbID: error.id },
+						payload: { verbID: error.verbId },
 					})
 				}}
 			>

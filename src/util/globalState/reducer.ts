@@ -50,7 +50,6 @@ const addProcessError = createHandlerWithAction<
 	AppGlobalState,
 	{ processError: ProcessError }
 >('ADD_PROCESS_ERROR', (state, payload) => {
-	console.log('Error:', state)
 	return {
 		processConfiguration: {
 			...state.processConfiguration,
@@ -62,6 +61,33 @@ const addProcessError = createHandlerWithAction<
 			...state.processState,
 			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
 			errors: [...state.processState.errors, payload.processError],
+		},
+		UIState: { ...state.UIState },
+	}
+})
+
+const correctProcessError = createHandlerWithAction<
+	AppGlobalState,
+	{ id: string }
+>('CORRECT_PROCESS_ERROR', (state, payload) => {
+	const errorIndex = state.processState.errors.findIndex((error) => error.id === payload.id)
+	const errorData = state.processState.errors[errorIndex]
+	errorData.status = 'corrected'
+
+	const errors = [...state.processState.errors]
+	errors[errorIndex] = errorData
+
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			database: { ...state.processConfiguration.database },
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors,
 		},
 		UIState: { ...state.UIState },
 	}
@@ -190,6 +216,10 @@ export type GlobalAction =
 			payload: PayloadTypeFromAction<typeof addProcessError.action>
 	  }
 	| {
+			type: 'CORRECT_PROCESS_ERROR'
+			payload: PayloadTypeFromAction<typeof correctProcessError.action>
+	  }
+	| {
 			type: 'CHANGE_STATUS'
 			payload: PayloadTypeFromAction<typeof changeStatus.action>
 	  }
@@ -213,6 +243,7 @@ export type GlobalAction =
 const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.case(addFetchedVerb.action, addFetchedVerb.handler)
 	.case(addProcessError.action, addProcessError.handler)
+	.case(correctProcessError.action, correctProcessError.handler)
 	.case(changeStatus.action, changeStatus.handler)
 	.case(changeRequisitionDelay.action, changeRequisitionDelay.handler)
 	.case(changeDatabaseConfiguration.action, changeDatabaseConfiguration.handler)

@@ -163,7 +163,9 @@ export const useVerbFetcher = () => {
 		setEnrichedVerbData((prevVerbData) => {
 			const verbData = [...prevVerbData]
 			const editedVerbIndex = verbData.findIndex((vd) => vd.metadata.id === id)
-			verbData[editedVerbIndex] = newVerbData
+
+			verbData[editedVerbIndex].payload = newVerbData.payload
+
 			return verbData
 		})
 	}

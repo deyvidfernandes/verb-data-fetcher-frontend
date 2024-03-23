@@ -56,7 +56,7 @@ export const VerbFetcher = () => {
 			</Section>
 			<VerbDataEditorModal
 				ref={ref}
-				editingVerbData={editingVerb}
+				editingVerb={editingVerb}
 				onSuccessfulSave={(editedData) => {
 					handleSaveEditedVerbData(editedData)
 				}}

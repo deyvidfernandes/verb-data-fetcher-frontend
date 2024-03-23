@@ -10,7 +10,7 @@ import { createCheckers } from 'ts-interface-checker'
 import { ModalMessage } from '@/components/basic/modal/ModalMessage'
 
 interface VerbDataEditorModalProps {
-	editingVerbData?: EnrichedVerb
+	editingVerb?: EnrichedVerb
 	onSuccessfulSave?: (editedVerbData: EnrichedVerb) => void
 }
 
@@ -83,17 +83,20 @@ interface VerbDataEditorProps extends VerbDataEditorModalProps {
 }
 
 const VerbDataEditor = (props: VerbDataEditorProps) => {
-	const { editingVerbData, onSuccessfulSave, onClose, onSaveTry, onSaveError } = props
+	const { editingVerb, onSuccessfulSave, onClose, onSaveTry, onSaveError } = props
 
+	const editingVerbData = editingVerb?.payload
 	const initialCode = JSON.stringify(editingVerbData, null, '\t')
 	const [code, setCode] = useState(initialCode)
 
 	const handleSave = () => {
 		try {
-			const data = JSON.parse(code)
+			const verbPayloadData = JSON.parse(code)
 			const { EnrichedVerbTI: EnrichedVerbChecker } = createCheckers({ EnrichedVerbTI })
-			EnrichedVerbChecker.strictCheck(data)
+			EnrichedVerbChecker.strictCheck(verbPayloadData)
 
+			if (!editingVerb) throw new Error('No verb data provided for editing')
+			const data = { metadata: editingVerb.metadata, payload: verbPayloadData }
 			onSuccessfulSave?.(data)
 		} catch (error) {
 			onSaveError((error as Error).message)

@@ -19,7 +19,6 @@ export const EnrichedVerbForm = t.iface([], {
 })
 
 export const EnrichedVerb = t.iface([], {
-	isEnriching: 'boolean',
 	infinitive: EnrichedVerbForm,
 	simplePast: EnrichedVerbForm,
 	pastParticiple: EnrichedVerbForm,

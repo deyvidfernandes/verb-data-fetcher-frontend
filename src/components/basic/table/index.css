@@ -1,0 +1,12 @@
+.unique-border-table {
+   thead {
+     border-bottom: theme(colors.brandOrange) 2px solid;
+   }
+   tbody tr:not(:last-child) {
+     border-bottom: theme(colors.brandOrange) 2px solid;
+   }
+ 
+   td:not(:last-child), th:not(:last-child) {
+     border-right: theme(colors.brandOrange) 2px solid;
+   }
+ }

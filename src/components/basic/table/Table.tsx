@@ -1,4 +1,5 @@
 import { ListComponent, ListComponentArray } from '@/util/types'
+import './index.css'
 
 interface Props {
 	headers: ListComponent[]
@@ -31,7 +32,7 @@ export const Table = ({ headers, data }: Props) => {
 
 	return (
 		<div className='w-full border-2 border-brandOrange rounded-lg overflow-hidden'>
-			<table className='w-full'>
+			<table className='w-full unique-border-table'>
 				<thead>
 					<tr>
 					{tableHeaderNodes}

@@ -1,5 +1,5 @@
 import Button from '@/components/basic/Button'
-import { Table } from '@/components/basic/Table'
+import { Table } from '@/components/basic/table/Table'
 import { Tab } from '@/components/panel/Tab'
 import { capitalize } from '@/util/fns'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'

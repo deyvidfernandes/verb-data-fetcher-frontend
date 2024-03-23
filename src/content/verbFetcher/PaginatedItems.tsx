@@ -1,33 +1,28 @@
-import { scrollToElement } from '@/util/fns'
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import ReactPaginate from 'react-paginate'
 
 interface Props<D> {
 	items: D[]
-	component: (props: D) => ReactNode
+	component: (verbData: D) => ReactNode
 	itemsPerPage: number
-	elementIdToScrollOnPageChange: string
+	page: number
+	onPageChange: (selectedItem: {
+		selected: number
+	}) => void
 }
 
 export const PaginatedItems = <DataType,>({
 	items,
 	component,
 	itemsPerPage,
-	elementIdToScrollOnPageChange,
+	page,
+	onPageChange,
 }: Props<DataType>) => {
-	const [itemOffset, setItemOffset] = useState(0)
+	const newOffset = (page * itemsPerPage) % items.length
 
-	const endOffset = itemOffset + itemsPerPage
-	console.log(`Loading items from ${itemOffset} to ${endOffset}`)
-	const currentItems = items.slice(itemOffset, endOffset)
+	const endOffset = newOffset + itemsPerPage
+	const currentItems = items.slice(newOffset, endOffset)
 	const pageCount = Math.ceil(items.length / itemsPerPage)
-
-	const handlePageClick = ({ selected }: { selected: number }) => {
-		scrollToElement(elementIdToScrollOnPageChange)
-		const newOffset = (selected * itemsPerPage) % items.length
-		console.log(`User requested page number ${selected}, which is offset ${newOffset}`)
-		setItemOffset(newOffset)
-	}
 
 	return (
 		<>
@@ -37,20 +32,20 @@ export const PaginatedItems = <DataType,>({
 			<ReactPaginate
 				breakLabel='...'
 				nextLabel='>'
-				onPageChange={handlePageClick}
+				onPageChange={onPageChange}
 				pageRangeDisplayed={2}
 				pageCount={pageCount}
+				forcePage={page}
 				previousLabel='<'
 				renderOnZeroPageCount={null}
-				className='flex flex-row w-full justify-center items-center bg-brandOrange h-12'
-				pageClassName='flex items-center justify-center w-10 h-10 bg-brandOrange'
-				activeClassName='circle-highlight text-red-500'
-				nextClassName='flex text-white items-center justify-center w-10 h-10 bg-brandOrange '
-				previousClassName='flex text-white items-center justify-center w-10 h-10 bg-brandOrange '
-				pageLinkClassName='text-lg  text-white no-underline'
-				previousLinkClassName='text-lg text-white no-underline'
-				disabledLinkClassName='text-white opacity-50 cursor-not-allowed'
-				breakClassName='text-lg size-10 flex items-center justify-center text-white no-underline'
+				className='flex flex-row w-full justify-center items-center text-white bg-brandOrange h-12'
+				pageClassName='flex items-center justify-center w-10 h-10'
+				pageLinkClassName='text-lg no-underline'
+				activeClassName='circle-highlight'
+				nextClassName='flex items-center justify-center w-10 h-10'
+				previousClassName='flex items-center justify-center w-10 h-10'
+				disabledLinkClassName='opacity-50 cursor-not-allowed'
+				breakClassName='text-lg size-10 flex items-center justify-center no-underline'
 			/>
 		</>
 	)

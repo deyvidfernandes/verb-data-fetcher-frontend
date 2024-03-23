@@ -134,7 +134,7 @@ const DictionaryViewer = (props: { meanings: Meaning[][] }) => {
 					}
 
 					return (
-						<div key={UUIDv4()} className='text-sm list-decimal'>
+						<div key={meaning.id} className='text-sm list-decimal'>
 							<li className='ml-4'>
 								<p className='font-medium'>{definition}</p>
 								{example && (

@@ -25,14 +25,13 @@ class VerbData implements EnrichedVerb {
 	id: string
 
 	constructor(init: {
-		isEnriching: boolean
 		simplePast: EnrichedVerbForm
 		pastParticiple: EnrichedVerbForm
 		infinitive: EnrichedVerbForm
 		index: number
 	}) {
-		const { isEnriching, index, infinitive, pastParticiple, simplePast } = init
-		this.isEnriching = isEnriching
+		const { index, infinitive, pastParticiple, simplePast } = init
+		this.isEnriching = true
 		this.simplePast = simplePast
 		this.pastParticiple = pastParticiple
 		this.infinitive = infinitive
@@ -80,6 +79,7 @@ class VerbData implements EnrichedVerb {
 								definition: def.definition,
 								example: def.example,
 								synonyms,
+								id: UUID4(),
 							}
 							return cleanedDef
 						})
@@ -207,8 +207,7 @@ export const useVerbFetcher = () => {
 					simplePastUS,
 				} = verb
 
-				const verbDataInitializer: EnrichedVerb = {
-					isEnriching: true,
+				const verbDataInitializer = {
 					simplePast: {
 						wordUS: simplePastUS,
 						wordUK: simplePastUK,
@@ -220,7 +219,6 @@ export const useVerbFetcher = () => {
 					infinitive: {
 						wordUS: infinitive,
 					},
-					id: UUID4(),
 					index: index++,
 					errors: [],
 				}

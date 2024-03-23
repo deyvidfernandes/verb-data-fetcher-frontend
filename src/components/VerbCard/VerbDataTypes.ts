@@ -4,6 +4,7 @@ export interface Meaning {
 	definition: string
 	synonyms?: string[]
 	example?: string
+	id: string
 }
 ;[]
 

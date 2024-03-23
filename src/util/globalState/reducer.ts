@@ -26,7 +26,7 @@ const addFetchedVerb = createHandlerWithAction<
 	{ verbDataSize: number; enrichmentDuration: number }
 >('ADD_FETCHED_VERB', (state, payload) => {
 	const lastEnrichmentDuration = [...state.processState.lastEnrichmentDuration]
-	if (lastEnrichmentDuration.length === 10) lastEnrichmentDuration.pop()
+	if (lastEnrichmentDuration.length === 10) lastEnrichmentDuration.shift()
 	lastEnrichmentDuration.push(payload.enrichmentDuration)
 	return {
 		processConfiguration: {

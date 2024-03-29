@@ -22,7 +22,7 @@ export const EnrichedVerb = t.iface([], {
 	infinitive: EnrichedVerbForm,
 	simplePast: EnrichedVerbForm,
 	pastParticiple: EnrichedVerbForm,
-	meanings: t.opt(t.array(t.array(Meaning))),
+	meanings: t.array(t.array(Meaning)),
 	usageIndex: 'number',
 	phonetic: 'string',
 })

@@ -196,7 +196,7 @@ export const useVerbFetcher = () => {
 	useEffect(() => {
 		const fetchVerbData = async (rawVerbData: RawVerb[]) => {
 			let index = 0
-			for await (const verb of rawVerbData.slice(0, 12)) {
+			for await (const verb of rawVerbData) {
 				const {
 					infinitive,
 					pastParticipleUK,
@@ -245,7 +245,7 @@ export const useVerbFetcher = () => {
 				}
 
 				if (!verbInEnrichment.payload.phonetic) {
-					addProcessError(verbInEnrichment, 'No phonetic data available', 'warning')
+					addProcessError(verbInEnrichment, 'No phonetic data available', 'error')
 				}
 
 				verbInEnrichment.endEnrichment()

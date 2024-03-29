@@ -173,16 +173,15 @@ export const useVerbFetcher = () => {
 	const addProcessError = (
 		verbData: VerbData,
 		description: string,
-		status: 'warning' | 'error',
 	) => {
 		const error = {
-			status,
+			status: 'error',
 			verbName: verbData.payload.infinitive.wordUS,
 			verbIndex: verbData.metadata.index,
 			info: description,
 			verbId: verbData.metadata.id,
 			id: UUID4(),
-		}
+		} as const
 		verbData.addError(error)
 		dispatchGlobalAction({
 			type: 'ADD_PROCESS_ERROR',
@@ -241,11 +240,11 @@ export const useVerbFetcher = () => {
 				if (dictionaryData) {
 					await verbInEnrichment.enrichWithDictionaryData(dictionaryData)
 				} else {
-					addProcessError(verbInEnrichment, 'No dictionary data available', 'error')
+					addProcessError(verbInEnrichment, 'No dictionary data available')
 				}
 
 				if (!verbInEnrichment.payload.phonetic) {
-					addProcessError(verbInEnrichment, 'No phonetic data available', 'error')
+					addProcessError(verbInEnrichment, 'No phonetic data available')
 				}
 
 				verbInEnrichment.endEnrichment()

@@ -58,7 +58,7 @@ export enum ProcessStatus {
 }
 
 export interface ProcessError {
-	status: 'error' | 'warning' | 'corrected'
+	status: 'error' | 'corrected'
 	verbIndex: number
 	verbName: string
 	verbId: string

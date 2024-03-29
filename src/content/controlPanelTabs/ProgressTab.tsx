@@ -53,8 +53,6 @@ export const ProgressTab = () => {
 		setLastRemainingTime(remainingTimeMillisec)
 	}, [lastEnrichmentDuration])
 
-	console.log(lastEnrichmentDuration)
-
 	const estimatedRemainingTime = new Date(remainingTimeMillisec)
 		.toISOString()
 		.substring(11, 19)

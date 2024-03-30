@@ -182,6 +182,47 @@ const setupProcess = createHandlerWithAction<
 	}
 })
 
+const registerProdMetric = createHandlerWithAction<
+	AppGlobalState,
+	{
+		metricName: string
+		dataSize: number
+		prodDuration: number
+	}
+>('REGISTER_PROD_METRIC', (state, payload) => {
+	const dataProdMetricsMap = new Map(state.processState.dataProductionMetrics)
+
+	const metricInState = dataProdMetricsMap.get(payload.metricName) || {
+		dataSize: 0,
+		prodDuration: [],
+	}
+
+	const lastProdDuration = [...metricInState.prodDuration]
+	if (lastProdDuration.length === 5) lastProdDuration.shift()
+	lastProdDuration.push(payload.prodDuration)
+
+	dataProdMetricsMap.set(payload.metricName, {
+		dataSize: payload.dataSize + metricInState.dataSize,
+		prodDuration: lastProdDuration,
+	})
+
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			delay: state.processConfiguration.delay,
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			dataProductionMetrics: dataProdMetricsMap,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors: [...state.processState.errors],
+		},
+		UIState: { ...state.UIState },
+	}
+})
+
 const focusOnVerb = createHandlerWithAction<
 	AppGlobalState,
 	{
@@ -237,6 +278,10 @@ export type GlobalAction =
 			payload: PayloadTypeFromAction<typeof setupProcess.action>
 	  }
 	| {
+			type: 'REGISTER_PROD_METRIC'
+			payload: PayloadTypeFromAction<typeof registerProdMetric.action>
+	  }
+	| {
 			type: 'FOCUS_ON_VERB'
 			payload: PayloadTypeFromAction<typeof focusOnVerb.action>
 	  }
@@ -249,6 +294,7 @@ const globalAppStateReducer = reducerWithInitialState(INITIAL_GLOBAL_STATE)
 	.case(changeRequisitionDelay.action, changeRequisitionDelay.handler)
 	.case(changeDatabaseConfiguration.action, changeDatabaseConfiguration.handler)
 	.case(setupProcess.action, setupProcess.handler)
+	.case(registerProdMetric.action, registerProdMetric.handler)
 	.case(focusOnVerb.action, focusOnVerb.handler)
 	.build()
 

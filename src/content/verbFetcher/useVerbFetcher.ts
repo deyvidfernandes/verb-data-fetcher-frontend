@@ -6,11 +6,12 @@ import {
 	EnrichedVerbForm,
 	Meaning,
 } from '@/components/VerbCard/VerbDataTypes'
-import { DictionaryAPIData, fetchWord } from '@/api/dictionary/fetchVerb'
+import { DictionaryAPIData, fetchWord as _fetchWord } from '@/api/dictionary/fetchVerb'
 import { Timer, arithmeticAverage, findPropInObjectArray } from '../../util/fns'
-import { fetchNgram } from '@/api/ngram/fetchNgram'
+import { fetchNgram as _fetchNgram } from '@/api/ngram/fetchNgram'
 import { v4 as UUID4 } from 'uuid'
 import { ControlledSessionStorage } from '../../util/sessionStorage/ControlledSessionStorage'
+import { useFetchMetrics } from '@/api/useFetchMetrics'
 
 class VerbData implements EnrichedVerb {
 	payload: {
@@ -142,11 +143,15 @@ class VerbData implements EnrichedVerb {
 }
 
 export const useVerbFetcher = () => {
+
 	const rawVerbData = useGlobalStateContext(
 		(v) => v.appGlobalState.processConfiguration.dataSource?.rawVerbData,
 	)
 	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
 	const [enrichedVerbData, setEnrichedVerbData] = useState<EnrichedVerb[]>([])
+
+	const fetchNgram = useFetchMetrics(_fetchNgram, 'ngram', dispatchGlobalAction)
+	const fetchWord = useFetchMetrics(_fetchWord, 'dictionary', dispatchGlobalAction)
 
 	const addNewVerb = (verbData: EnrichedVerb) => {
 		setEnrichedVerbData((prevVerbData) => [...prevVerbData, verbData])
@@ -170,10 +175,7 @@ export const useVerbFetcher = () => {
 		})
 	}
 
-	const addProcessError = (
-		verbData: VerbData,
-		description: string,
-	) => {
+	const addProcessError = (verbData: VerbData, description: string) => {
 		const error = {
 			status: 'error',
 			verbName: verbData.payload.infinitive.wordUS,
@@ -224,18 +226,18 @@ export const useVerbFetcher = () => {
 
 				const enrichmentTimer = new Timer()
 
-				const { timeseries: nGramDataParticiple } = await fetchNgram(pastParticipleUS)
-
-				const { timeseries: nGramDataSimplePast } = await fetchNgram(simplePastUS)
+				const nGramDataParticiple = await fetchNgram({ngram: pastParticipleUS}) 
+				const nGramDataSimplePast = await fetchNgram({ngram: simplePastUS})
+				if (!nGramDataParticiple || !nGramDataSimplePast) throw new Error( 'Error fetching Ngram')
 
 				const averageUsageIndex = arithmeticAverage(
-					arithmeticAverage(...nGramDataParticiple),
-					arithmeticAverage(...nGramDataSimplePast),
+					arithmeticAverage(...nGramDataParticiple.timeseries),
+					arithmeticAverage(...nGramDataSimplePast.timeseries),
 				)
 				verbInEnrichment.addUsageIndex(averageUsageIndex)
 				updateLastVerb(verbInEnrichment)
 
-				const dictionaryData = await fetchWord(infinitive)
+				const dictionaryData = await fetchWord({word: infinitive})
 
 				if (dictionaryData) {
 					await verbInEnrichment.enrichWithDictionaryData(dictionaryData)

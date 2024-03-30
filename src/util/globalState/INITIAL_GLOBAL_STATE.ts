@@ -4,6 +4,7 @@ export const INITIAL_GLOBAL_STATE: AppGlobalState = {
 	processState: {
 		status: ProcessStatus.WAITING_SETUP,
 		totalFetchedData: 0,
+		dataProductionMetrics: new Map(),
 		errors: [],
 		enrichedVerbsCount: 0,
 		lastEnrichmentDuration: [], // this does not consider the delay

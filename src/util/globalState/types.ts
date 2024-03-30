@@ -22,7 +22,13 @@ export interface ProcessState {
 	errors: ProcessError[]
 	verbsQueued: number
 	totalFetchedData: number
+	dataProductionMetrics: Map<string, DataProductionMetric>
 	lastEnrichmentDuration: number[]
+}
+
+export interface DataProductionMetric {
+	dataSize: number,
+	prodDuration: number[]
 }
 
 export interface Database {

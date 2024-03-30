@@ -1,12 +1,15 @@
 import { TextDisplay } from '@/components/basic/TextDisplay'
 import { Tab } from '@/components/panel/Tab'
-import { formatBytes } from '@/util/fns'
+import { arithmeticAverage, formatBytes } from '@/util/fns'
 import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ReactNode } from 'react'
 
 export const DataSourcesTab = () => {
 	const baseDataSource = useGlobalStateContext(
 		(v) => v.appGlobalState.processConfiguration.dataSource,
+	)
+	const dataProductionMetrics = useGlobalStateContext(
+		(v) => v.appGlobalState.processState.dataProductionMetrics,
 	)
 
 	const ngramAPIAnchorElement = (
@@ -33,6 +36,16 @@ export const DataSourcesTab = () => {
 		},
 	]
 
+	console.log(dataProductionMetrics)
+	const dictionaryAPIMetrics = dataProductionMetrics.get('dictionary')
+	const dictionaryProdAvgDuration = dictionaryAPIMetrics
+		? `${(arithmeticAverage(...dictionaryAPIMetrics.prodDuration) / 1000).toFixed(3)}s`
+		: 'N/A'
+	const ngramAPIMetrics = dataProductionMetrics.get('ngram')
+	const ngramProdAvgDuration = ngramAPIMetrics
+		? `${(arithmeticAverage(...ngramAPIMetrics.prodDuration) / 1000).toFixed(3)}s`
+		: 'N/A'
+
 	return (
 		<Tab>
 			<div className='flex flex-col content-start'>
@@ -50,16 +63,24 @@ export const DataSourcesTab = () => {
 					label='Enrichment data source 1 (dictionary API)'
 					value={dictionaryAPIAnchorElement}
 					subInfo={[
-						{ id: '1', label: 'Average response time', value: '0.00s' },
-						{ id: '2', label: 'Total data fetched', value: '0.00 kB' },
+						{ id: '1', label: 'Average response time', value: dictionaryProdAvgDuration },
+						{
+							id: '2',
+							label: 'Total data fetched',
+							value: formatBytes(dictionaryAPIMetrics?.dataSize || 0),
+						},
 					]}
 				/>
 				<DataSourceDisplay
 					label='Enrichment data source 2 (Ngram API)'
 					value={ngramAPIAnchorElement}
 					subInfo={[
-						{ id: '1', label: 'Average response time', value: '0.00s' },
-						{ id: '2', label: 'Total data fetched', value: '0.00 kB' },
+						{ id: '1', label: 'Average response time', value: ngramProdAvgDuration },
+						{
+							id: '2',
+							label: 'Total data fetched',
+							value: formatBytes(ngramAPIMetrics?.dataSize || 0),
+						},
 					]}
 				/>
 			</div>

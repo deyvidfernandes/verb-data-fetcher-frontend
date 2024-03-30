@@ -36,7 +36,7 @@ const Button = (props: Props) => {
 		<button
 			className={`py-2 ${square ? 'w-8 h-8' : 'max-w-80 w-full rounded-lg'} 
 				${variantClasses} text-2xl font-semibold text-white
-				flex items-center justify-center`}
+				flex items-center justify-center hover:brightness-105 transition-all duration-200`}
 			type={type}
 			{...builtInProps}
 		>

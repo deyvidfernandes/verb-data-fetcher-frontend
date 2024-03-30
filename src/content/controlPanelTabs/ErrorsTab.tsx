@@ -62,16 +62,22 @@ export const ErrorsTab = () => {
 		}
 	})
 
-	const uncorrectedErrors = processErrors.filter((error) => error.status === 'error').length
+	const uncorrectedErrors = processErrors.filter(
+		(error) => error.status === 'error',
+	).length
 
 	return (
 		<>
 			<Tab>
-			<p id='statusDisplay' className='font-semibold'>
-				There are {uncorrectedErrors} uncorrected errors
-			</p>
+				<p id='statusDisplay' className='font-semibold'>
+					There are {uncorrectedErrors} uncorrected errors
+				</p>
 				<div className='w-full flex flex-col gap-4'>
-					<Table headers={headerNodes} data={errorRowNodesList} />
+					<Table
+						headers={headerNodes}
+						data={errorRowNodesList}
+						noDataMessage='There are no reported errors yet'
+					/>
 				</div>
 			</Tab>
 		</>

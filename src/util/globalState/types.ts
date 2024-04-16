@@ -1,3 +1,5 @@
+import { EnrichedVerb } from "@/components/VerbCard/VerbDataTypes"
+
 export interface AppGlobalState {
 	processState: ProcessState
 	processConfiguration: ProcessConfiguration
@@ -20,6 +22,7 @@ export interface ProcessState {
 	status: ProcessStatus
 	enrichedVerbsCount: number
 	errors: ProcessError[]
+	enrichedVerbData?: EnrichedVerb[]
 	verbsQueued: number
 	totalFetchedData: number
 	dataProductionMetrics: Map<string, DataProductionMetric>

@@ -4,7 +4,7 @@ import { GlobalStateProvider } from './util/globalState/GlobalStateContext'
 import { ControlButton } from './content/ControlButton'
 import { Section } from './components/basic/Section'
 import { VerbFetcher } from './content/verbFetcher/VerbFetcher'
-import { ControlledSessionStorage } from './util/globalState/ControlledSessionStorage'
+import { ControlledSessionStorage } from './util/sessionStorage/ControlledSessionStorage'
 
 function App() {
 	ControlledSessionStorage.init()

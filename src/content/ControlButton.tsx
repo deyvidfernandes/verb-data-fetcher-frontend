@@ -6,10 +6,12 @@ import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { useRerenderingOnceRef } from '@/util/hooks/useRenderingOnceRef'
 import { SetupModal } from './modals/config/SetupModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { SaveConfirmationModal } from './modals/SaveConfirmationModal'
 
 export const ControlButton = () => {
 	const status = useGlobalStateContext((v) => v.appGlobalState.processState.status)
 	const setupModalRef = useRerenderingOnceRef<ModalInterface>()
+	const saveConfirmationModalRef = useRerenderingOnceRef<ModalInterface>()
 
 	const handleSetup = () => {
 		setupModalRef.current?.open()
@@ -19,7 +21,9 @@ export const ControlButton = () => {
 
 	const handleResume = () => {}
 
-	const handleSave = () => {}
+	const handleSave = () => {
+		saveConfirmationModalRef.current?.open()
+	}
 
 	let controlButton
 
@@ -71,6 +75,7 @@ export const ControlButton = () => {
 	return (
 		<>
 			<SetupModal ref={setupModalRef} />
+			<SaveConfirmationModal ref={saveConfirmationModalRef} />
 			{controlButton}
 		</>
 	)

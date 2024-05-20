@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useGlobalStateContext } from '../../util/globalState/GlobalStateContext'
-import { ProcessError, RawVerb } from '../../util/globalState/types'
+import { ProcessError, ProcessStatus, RawVerb } from '../../util/globalState/types'
 import {
 	EnrichedVerb,
 	EnrichedVerbForm,
@@ -148,7 +148,20 @@ export const useVerbFetcher = () => {
 		(v) => v.appGlobalState.processConfiguration.dataSource?.rawVerbData,
 	)
 	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
-	const [enrichedVerbData, setEnrichedVerbData] = useState<EnrichedVerb[]>([])
+	const [enrichedVerbData, _setEnrichedVerbData] = useState<EnrichedVerb[]>([])
+	let currentEnrichedVerbData: EnrichedVerb[] = []
+
+	type param =  EnrichedVerb[] | {(prev: EnrichedVerb[]): EnrichedVerb[]}
+
+	const setEnrichedVerbData = (value: param) => {
+		if (typeof value === 'function') {
+			_setEnrichedVerbData((prev) => value(prev))
+			currentEnrichedVerbData = value(currentEnrichedVerbData)
+		} else {
+			_setEnrichedVerbData(value)
+			currentEnrichedVerbData = value
+		}
+	}
 
 	const fetchNgram = useFetchMetrics(_fetchNgram, 'ngram', dispatchGlobalAction)
 	const fetchWord = useFetchMetrics(_fetchWord, 'dictionary', dispatchGlobalAction)
@@ -170,7 +183,6 @@ export const useVerbFetcher = () => {
 			const editedVerbIndex = verbData.findIndex((vd) => vd.metadata.id === id)
 
 			verbData[editedVerbIndex].payload = newVerbData.payload
-
 			return verbData
 		})
 	}
@@ -197,7 +209,7 @@ export const useVerbFetcher = () => {
 	useEffect(() => {
 		const fetchVerbData = async (rawVerbData: RawVerb[]) => {
 			let index = 0
-			for await (const verb of rawVerbData) {
+			for await (const verb of rawVerbData.slice(0, 40)) {
 				const {
 					infinitive,
 					pastParticipleUK,
@@ -259,6 +271,7 @@ export const useVerbFetcher = () => {
 					setTimeout(resolve, delay)
 				})
 
+
 				dispatchGlobalAction({
 					type: 'ADD_FETCHED_VERB',
 					payload: {
@@ -267,6 +280,13 @@ export const useVerbFetcher = () => {
 					},
 				})
 			}
+			console.log(currentEnrichedVerbData)
+			dispatchGlobalAction({
+				type: 'FINISH_ENRICHMENT_PROCESS',
+				payload: {
+					enrichedVerbData: currentEnrichedVerbData,
+				},
+			})
 		}
 
 		if (rawVerbData) fetchVerbData(rawVerbData)

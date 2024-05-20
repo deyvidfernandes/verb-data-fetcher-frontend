@@ -4,13 +4,16 @@ import { EnrichedVerb } from '@/components/VerbCard/VerbDataTypes'
 import { fetchBackend } from './fetchBackend'
 import { RequestResponse } from './useSetDatabaseConnection'
 
-export const usePostVerbData = (verbData: EnrichedVerb[]) => {
+export const usePostVerbData = () => {
 	const [responseData, setResponseData] = useState<RequestResponse>()
 
-	const convertedVerbData = verbData.map(convertEnrichedVerbToAPIFormat)
+	
+	const postVerbData = async (verbData: EnrichedVerb[]) => {
+		const filtered = verbData.filter((verb) => verb.metadata.errors.length === 0)
+		const convertedVerbData = filtered.map(convertEnrichedVerbToAPIFormat)
 
-	const postVerbData = async () => {
-		const res = await fetchBackend<undefined>(`${BACKEND_API_ADDRESS}api/verb-data`, {
+		console.log(convertedVerbData)
+		const res = await fetchBackend<undefined>(`${BACKEND_API_ADDRESS}verb-data`, {
 			method: 'POST',
 			headers: new Headers({ 'content-type': 'application/json' }),
 			body: JSON.stringify(convertedVerbData),
@@ -73,11 +76,11 @@ const convertEnrichedVerbToAPIFormat = (
 		participleUK,
 		participleUKAudio: participleAudioUK,
 		usageIndex,
-		definitions: JSON.stringify(meanings),
+		definitions: btoa(encodeURI(JSON.stringify(meanings))),
 		phonetics: phonetic,
 	}
 }
-
+//encodeURI(JSON.stringify(meanings))
 interface EnrichedVerbAPIFormat {
 	infinitive: string
 	infinitiveAudio?: string

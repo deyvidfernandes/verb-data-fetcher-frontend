@@ -104,7 +104,7 @@ const DataSourceDisplay = ({ label: name, value, subInfo }: Props) => {
 			<TextDisplay label={name} value={value} bigger />
 			<div className='pl-4'>
 				{subInfo.map((info) => (
-					<TextDisplay key={info.id} {...info} subInfo />
+					<TextDisplay key={info.id} {...info} variant='gray' />
 				))}
 			</div>
 		</div>

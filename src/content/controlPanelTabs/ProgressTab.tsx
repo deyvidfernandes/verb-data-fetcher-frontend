@@ -47,7 +47,6 @@ export const ProgressTab = () => {
 		(verbsQueued - enrichedVerbsCount)
 	if (lastRemainingTime)
 		remainingTimeMillisec = (lastRemainingTime + remainingTimeMillisec) / 2
-	console.log(lastEnrichmentDuration)
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setLastRemainingTime(remainingTimeMillisec)

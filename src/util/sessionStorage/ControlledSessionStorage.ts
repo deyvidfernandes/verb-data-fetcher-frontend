@@ -6,7 +6,6 @@ export namespace ControlledSessionStorage {
 	const wrapWithVerify = <F extends Function>(fn: F): F => {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		const returnFn = (...args: any[]) => {
-			console.log(hasInitiated)
 			if (!hasInitiated)
 				throw new Error('Tried to to use session storage before initialization')
 			return fn(...args)

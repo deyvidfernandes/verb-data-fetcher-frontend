@@ -26,7 +26,7 @@ export const DatabaseTab = () => {
 	}
 	return (
 		<div className='flex items-center justify-center p-8'>
-			<p className='font-medium text-gray-300 text-xl'>
+			<p className='font-medium text-orange-300 text-xl'>
 				{config.persistData
 					? 'Waiting for setup...'
 					: 'Only "Output JSON" output method was selected'}

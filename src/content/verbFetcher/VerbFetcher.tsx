@@ -15,9 +15,9 @@ import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 // const dummyData = dummy as EnrichedVerb[]
 
 const useErrorCorrector = () => {
-	const [ processErrors, dispatchGlobalAction ] = useGlobalStateContext(v => [
+	const [processErrors, dispatchGlobalAction] = useGlobalStateContext((v) => [
 		v.appGlobalState.processState.errors,
-		v.dispatchGlobalAction
+		v.dispatchGlobalAction,
 	])
 
 	const correctErrors = (verbId: string) => {
@@ -27,15 +27,14 @@ const useErrorCorrector = () => {
 				dispatchGlobalAction({
 					type: 'CORRECT_PROCESS_ERROR',
 					payload: {
-						id: error.id
-					}
+						id: error.id,
+					},
 				})
 			}
 		}
 	}
 
 	return { correctErrors }
-
 }
 
 export const VerbFetcher = () => {
@@ -45,7 +44,7 @@ export const VerbFetcher = () => {
 		enrichedVerbData,
 		verbsPerPage,
 	)
-	const {correctErrors} = useErrorCorrector()
+	const { correctErrors } = useErrorCorrector()
 
 	const [editingVerb, setEditingVerb] = useState<EnrichedVerb>()
 	const ref = useRerenderingOnceRef<ModalInterface>()
@@ -66,22 +65,28 @@ export const VerbFetcher = () => {
 	return (
 		<>
 			<Section title='Preview' id='preview'>
-				<Panel header='Search'>
-					<PaginatedItems<EnrichedVerb>
-						itemsPerPage={verbsPerPage}
-						page={page}
-						items={enrichedVerbData}
-						component={(verbData: EnrichedVerb) => {
-							return (
-								<VerbCard
-									onEdit={() => handleEditVerb(verbData)}
-									key={verbData.metadata.id}
-									verbData={verbData}
-								/>
-							)
-						}}
-						onPageChange={handlePageClick}
-					/>
+				<Panel header=''>
+					{enrichedVerbData[0] ? (
+						<PaginatedItems<EnrichedVerb>
+							itemsPerPage={verbsPerPage}
+							page={page}
+							items={enrichedVerbData}
+							component={(verbData: EnrichedVerb) => {
+								return (
+									<VerbCard
+										onEdit={() => handleEditVerb(verbData)}
+										key={verbData.metadata.id}
+										verbData={verbData}
+									/>
+								)
+							}}
+							onPageChange={handlePageClick}
+						/>
+					) : (
+						<p className='flex items-center justify-center h-20 w-full font-medium text-orange-300 text-xl'>
+							No data fetched yet
+						</p>
+					)}
 				</Panel>
 			</Section>
 			<VerbDataEditorModal

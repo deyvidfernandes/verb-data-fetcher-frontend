@@ -1,14 +1,16 @@
 import { Timer } from '@/util/fns'
 import { FetchInfo } from '../fetchInfo'
 
-export const fetchWord = async ({word}: {word: string}): Promise<FetchInfo<DictionaryAPIData[]> | false> => {
+export const fetchWord = async ({
+	word,
+}: { word: string }): Promise<FetchInfo<DictionaryAPIData[]> | false> => {
 	const fetchTimer = new Timer()
 	try {
 		const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		const responseTime = fetchTimer.getElapsedTime()
 		if (res.ok) {
 			const data = (await res.json()) as DictionaryAPIData[]
-			return { data, responseTime, dataSize: JSON.stringify(data).length }	
+			return { data, responseTime, dataSize: JSON.stringify(data).length }
 		}
 	} catch (error) {
 		return false

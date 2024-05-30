@@ -121,28 +121,28 @@ const changeStatus = createHandlerWithAction<AppGlobalState, { status: ProcessSt
 	},
 )
 
-const finishEnrichmentProcess = createHandlerWithAction<AppGlobalState, { enrichedVerbData: EnrichedVerb[] }>(
-	'FINISH_ENRICHMENT_PROCESS',
-	(state, payload) => {
-		return {
-			processConfiguration: {
-				...state.processConfiguration,
-				database: { ...state.processConfiguration.database },
-				// biome-ignore lint/style/noNonNullAssertion: <explanation>
-				dataSource: { ...state.processConfiguration.dataSource! },
-			},
-			processState: {
-				...state.processState,
-				status: ProcessStatus.WAITING_CONFIRMATION_TO_SAVE,
-				lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
-				errors: [...state.processState.errors],
-				dataProductionMetrics: new Map(state.processState.dataProductionMetrics),
-				enrichedVerbData: payload.enrichedVerbData,
-			},
-			UIState: { ...state.UIState },
-		}
-	},
-)
+const finishEnrichmentProcess = createHandlerWithAction<
+	AppGlobalState,
+	{ enrichedVerbData: EnrichedVerb[] }
+>('FINISH_ENRICHMENT_PROCESS', (state, payload) => {
+	return {
+		processConfiguration: {
+			...state.processConfiguration,
+			database: { ...state.processConfiguration.database },
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			dataSource: { ...state.processConfiguration.dataSource! },
+		},
+		processState: {
+			...state.processState,
+			status: ProcessStatus.WAITING_CONFIRMATION_TO_SAVE,
+			lastEnrichmentDuration: [...state.processState.lastEnrichmentDuration],
+			errors: [...state.processState.errors],
+			dataProductionMetrics: new Map(state.processState.dataProductionMetrics),
+			enrichedVerbData: payload.enrichedVerbData,
+		},
+		UIState: { ...state.UIState },
+	}
+})
 
 const changeRequisitionDelay = createHandlerWithAction<AppGlobalState, { delay: number }>(
 	'CHANGE_REQUISITION_DELAY',

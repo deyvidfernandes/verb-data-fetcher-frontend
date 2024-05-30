@@ -1,11 +1,11 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
 
 export type ListComponent = {
-	component: ReactNode, 
+	component: ReactNode
 	key: string
 }
 
 export type ListComponentArray = {
-	components: ListComponent[], 
+	components: ListComponent[]
 	key: string
 }

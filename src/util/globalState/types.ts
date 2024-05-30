@@ -1,4 +1,4 @@
-import { EnrichedVerb } from "@/components/VerbCard/VerbDataTypes"
+import { EnrichedVerb } from '@/components/VerbCard/VerbDataTypes'
 
 export interface AppGlobalState {
 	processState: ProcessState
@@ -30,7 +30,7 @@ export interface ProcessState {
 }
 
 export interface DataProductionMetric {
-	dataSize: number,
+	dataSize: number
 	prodDuration: number[]
 }
 

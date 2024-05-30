@@ -3,7 +3,9 @@ import { fetchBackend } from '../backend/fetchBackend'
 import { Timer } from '@/util/fns'
 import { FetchInfo } from '../fetchInfo'
 
-export const fetchNgram = async ({ngram}: {ngram: string}): Promise<FetchInfo<NgramAPIData>> => {
+export const fetchNgram = async ({
+	ngram,
+}: { ngram: string }): Promise<FetchInfo<NgramAPIData>> => {
 	const fetchTimer = new Timer()
 	const res = await fetchBackend<NgramAPIData[]>(
 		`${BACKEND_API_ADDRESS}ngram?ngram=${ngram}`,

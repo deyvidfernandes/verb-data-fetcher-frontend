@@ -1,5 +1,5 @@
 import { retryWithTimeout } from './fns'
-import { assert, describe, expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 describe('retryWithTimeout unit tests', () => {
 	test('Should repeat 5 times for 5 attempts', async () => {

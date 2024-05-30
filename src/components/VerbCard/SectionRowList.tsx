@@ -11,7 +11,11 @@ interface Props {
 	roundedBottom?: boolean
 }
 
-export const SectionRowList = ({ sections, variant = 'orange', roundedBottom }: Props) => {
+export const SectionRowList = ({
+	sections,
+	variant = 'orange',
+	roundedBottom,
+}: Props) => {
 	const isRedVariant = variant === 'red'
 	const borderColorClassName = isRedVariant ? 'border-brandRed' : 'border-brandOrange'
 

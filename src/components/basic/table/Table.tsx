@@ -37,7 +37,9 @@ export const Table = ({ headers, data, noDataMessage }: Props) => {
 					<tr>{tableHeaderNodes}</tr>
 				</thead>
 				<tbody>
-					{tableBodyNodes.length ? tableBodyNodes : (
+					{tableBodyNodes.length ? (
+						tableBodyNodes
+					) : (
 						<tr>
 							<td colSpan={tableHeaderNodes.length}>
 								<p className='align-middle text-center font-medium text-orange-300 text-xl py-4'>

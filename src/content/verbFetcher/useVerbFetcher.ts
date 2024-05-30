@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useGlobalStateContext } from '../../util/globalState/GlobalStateContext'
-import { ProcessError, ProcessStatus, RawVerb } from '../../util/globalState/types'
+import { ProcessError, RawVerb } from '../../util/globalState/types'
 import {
 	EnrichedVerb,
 	EnrichedVerbForm,
@@ -143,7 +143,6 @@ class VerbData implements EnrichedVerb {
 }
 
 export const useVerbFetcher = () => {
-
 	const rawVerbData = useGlobalStateContext(
 		(v) => v.appGlobalState.processConfiguration.dataSource?.rawVerbData,
 	)
@@ -151,7 +150,7 @@ export const useVerbFetcher = () => {
 	const [enrichedVerbData, _setEnrichedVerbData] = useState<EnrichedVerb[]>([])
 	let currentEnrichedVerbData: EnrichedVerb[] = []
 
-	type param =  EnrichedVerb[] | {(prev: EnrichedVerb[]): EnrichedVerb[]}
+	type param = EnrichedVerb[] | { (prev: EnrichedVerb[]): EnrichedVerb[] }
 
 	const setEnrichedVerbData = (value: param) => {
 		if (typeof value === 'function') {
@@ -238,9 +237,10 @@ export const useVerbFetcher = () => {
 
 				const enrichmentTimer = new Timer()
 
-				const nGramDataParticiple = await fetchNgram({ngram: pastParticipleUS}) 
-				const nGramDataSimplePast = await fetchNgram({ngram: simplePastUS})
-				if (!nGramDataParticiple || !nGramDataSimplePast) throw new Error( 'Error fetching Ngram')
+				const nGramDataParticiple = await fetchNgram({ ngram: pastParticipleUS })
+				const nGramDataSimplePast = await fetchNgram({ ngram: simplePastUS })
+				if (!nGramDataParticiple || !nGramDataSimplePast)
+					throw new Error('Error fetching Ngram')
 
 				const averageUsageIndex = arithmeticAverage(
 					arithmeticAverage(...nGramDataParticiple.timeseries),
@@ -249,7 +249,7 @@ export const useVerbFetcher = () => {
 				verbInEnrichment.addUsageIndex(averageUsageIndex)
 				updateLastVerb(verbInEnrichment)
 
-				const dictionaryData = await fetchWord({word: infinitive})
+				const dictionaryData = await fetchWord({ word: infinitive })
 
 				if (dictionaryData) {
 					await verbInEnrichment.enrichWithDictionaryData(dictionaryData)
@@ -270,7 +270,6 @@ export const useVerbFetcher = () => {
 				await new Promise((resolve) => {
 					setTimeout(resolve, delay)
 				})
-
 
 				dispatchGlobalAction({
 					type: 'ADD_FETCHED_VERB',

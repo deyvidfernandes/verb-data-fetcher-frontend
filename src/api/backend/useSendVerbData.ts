@@ -7,7 +7,6 @@ import { RequestResponse } from './useSetDatabaseConnection'
 export const usePostVerbData = () => {
 	const [responseData, setResponseData] = useState<RequestResponse>()
 
-	
 	const postVerbData = async (verbData: EnrichedVerb[]) => {
 		const filtered = verbData.filter((verb) => verb.metadata.errors.length === 0)
 		const convertedVerbData = filtered.map(convertEnrichedVerbToAPIFormat)

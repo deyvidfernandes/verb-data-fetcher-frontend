@@ -19,7 +19,7 @@ export const InputField = (props: Props) => {
 					placeholder={placeholder}
 					className=' font-md h-9 p-2 border-gray-300 border rounded-md 
 					hover:border-gray-400 focus:border-brandBlue focus:border-2 
-					outline-none transition-all placeholder:text-gray-400'
+					outline-none focus:outline-none transition-all placeholder:text-gray-400'
 					{...field}
 				/>
 			</div>

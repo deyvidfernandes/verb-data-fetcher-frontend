@@ -38,7 +38,7 @@ export const FileInputField = (props: Props) => {
 			<p className='font-medium'>{label}</p>
 			<label
 				onClick={handleFileUploadStart}
-				onKeyDown={handleFileUploadStart}
+				onKeyDown={(e) => {if (e.code === "Enter" || e.code === "Space") handleFileUploadStart(e)}}
 				htmlFor={field.name}
 				className='w-fit font-medium cursor-pointer
 				border-gray-300 border rounded-md p-3'

@@ -1,3 +1,4 @@
+import { useGlobalStateContext } from '@/util/globalState/GlobalStateContext'
 import { ReactNode, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -33,11 +34,13 @@ export const Modal = forwardRef<ModalInterface, ModalProps>(function SetupModal(
 	useImperativeHandle(ref, () => {
 		return {
 			open() {
-				if (dialogRef.current) dialogRef.current.showModal()
 				localOnOpen()
+				if (dialogRef.current) dialogRef.current.showModal()
+				document.body.classList.add("overflow-y-hidden")
 			},
 			close() {
 				if (dialogRef.current) dialogRef.current.close()
+				document.body.classList.remove("overflow-y-hidden")
 				localOnClose()
 			},
 		}

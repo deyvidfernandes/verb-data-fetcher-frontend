@@ -41,7 +41,10 @@ export const FileInputField = (props: Props) => {
 				onKeyDown={(e) => {if (e.code === "Enter" || e.code === "Space") handleFileUploadStart(e)}}
 				htmlFor={field.name}
 				className='w-fit font-medium cursor-pointer
-				border-gray-300 border rounded-md p-3'
+				border-gray-300 border rounded-md p-3 focus:border-brandBlue 
+				focus:border-2 outline-none transition-all'
+				// biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+				tabIndex={0}
 			>
 				{selectedFile ? selectedContent(selectedFile) : buttonContent}
 			</label>

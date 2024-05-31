@@ -10,6 +10,7 @@ import { SaveConfirmationModal } from './modals/SaveConfirmationModal'
 
 export const ControlButton = () => {
 	const status = useGlobalStateContext((v) => v.appGlobalState.processState.status)
+	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
 	const setupModalRef = useRerenderingOnceRef<ModalInterface>()
 	const saveConfirmationModalRef = useRerenderingOnceRef<ModalInterface>()
 
@@ -17,9 +18,27 @@ export const ControlButton = () => {
 		setupModalRef.current?.open()
 	}
 
-	const handleStop = () => {}
+	const handleStop = () => {
+		dispatchGlobalAction(
+			{ 
+				type: 'CHANGE_STATUS', 
+				payload: {
+					status: ProcessStatus.PAUSED,
+				}
+			}
+		)
+	}
 
-	const handleResume = () => {}
+	const handleResume = () => {
+		dispatchGlobalAction(
+			{ 
+				type: 'CHANGE_STATUS', 
+				payload: {
+					status: ProcessStatus.FETCHING,
+				}
+			}
+		)
+	}
 
 	const handleSave = () => {
 		saveConfirmationModalRef.current?.open()

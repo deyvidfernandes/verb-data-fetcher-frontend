@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useGlobalStateContext } from '../../util/globalState/GlobalStateContext'
-import { ProcessError, RawVerb } from '../../util/globalState/types'
+import { ProcessError, ProcessStatus, RawVerb } from '../../util/globalState/types'
 import {
 	EnrichedVerb,
 	EnrichedVerbForm,
@@ -143,8 +143,11 @@ class VerbData implements EnrichedVerb {
 }
 
 export const useVerbFetcher = () => {
-	const rawVerbData = useGlobalStateContext(
-		(v) => v.appGlobalState.processConfiguration.dataSource?.rawVerbData,
+	const [rawVerbData, processStatus] = useGlobalStateContext(
+		(v) => [
+			v.appGlobalState.processConfiguration.dataSource?.rawVerbData,
+			v.appGlobalState.processState.status
+		]
 	)
 	const dispatchGlobalAction = useGlobalStateContext((v) => v.dispatchGlobalAction)
 	const [enrichedVerbData, _setEnrichedVerbData] = useState<EnrichedVerb[]>([])
@@ -206,8 +209,11 @@ export const useVerbFetcher = () => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
+		const fetchedVerbs = enrichedVerbData.length
+		let isLoopRunning = true
 		const fetchVerbData = async (rawVerbData: RawVerb[]) => {
-			let index = 0
+			let index = fetchedVerbs
+			console.log(rawVerbData)
 			for await (const verb of rawVerbData.slice(0, 40)) {
 				const {
 					infinitive,
@@ -278,18 +284,30 @@ export const useVerbFetcher = () => {
 						verbDataSize: await verbInEnrichment.getPayloadLength(),
 					},
 				})
+				if (!isLoopRunning) {
+					break
+				}
 			}
-			console.log(currentEnrichedVerbData)
-			dispatchGlobalAction({
-				type: 'FINISH_ENRICHMENT_PROCESS',
-				payload: {
-					enrichedVerbData: currentEnrichedVerbData,
-				},
-			})
+			
+			if (isLoopRunning) {
+				dispatchGlobalAction({
+					type: 'FINISH_ENRICHMENT_PROCESS',
+					payload: {
+						enrichedVerbData: currentEnrichedVerbData,
+					},
+				})
+			}
+
+		}
+		console.log(fetchedVerbs)
+		if (processStatus === ProcessStatus.FETCHING) {
+			if (rawVerbData) fetchVerbData(rawVerbData.slice(fetchedVerbs))
 		}
 
-		if (rawVerbData) fetchVerbData(rawVerbData)
-	}, [rawVerbData, dispatchGlobalAction])
+		return () => {
+			isLoopRunning = false
+		}
+	}, [rawVerbData, dispatchGlobalAction, processStatus])
 
 	return { enrichedVerbData, changeVerbData }
 }
